@@ -6,7 +6,7 @@
 #ifndef _WORDGRAPH
 #define WORDGRAPH
 
-struct edge
+struct Edge
 {
     int id;
     std::string word;
@@ -16,7 +16,7 @@ struct edge
 class WordGraph
 {
 private:
-    std::map<char, std::vector<edge>> m_word_graph;
+    std::map<char, std::vector<Edge>> m_word_graph;
 
 
 public:

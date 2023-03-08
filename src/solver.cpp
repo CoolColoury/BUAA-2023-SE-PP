@@ -1,25 +1,49 @@
 #include "solver.h"
 
-void solver::GenChainAllStrategy::solve(WordGraph word_graph, parser::config config, const std::ostream& output)
+void GenChainAllStrategy::solve(WordGraph& word_graph, Config config, const std::ostream& output)
 {
 }
 
-void solver::GenChainWordLengthStrategy::solve(WordGraph word_graph, parser::config config, const std::ostream& output)
+void GenChainWordLengthStrategy::solve(WordGraph& word_graph, Config config, const std::ostream& output)
 {
 }
 
-void solver::GenChainLetterLengthStrategy::solve(WordGraph word_graph, parser::config config, const std::ostream& output)
+void GenChainLetterLengthStrategy::solve(WordGraph& word_graph, Config config, const std::ostream& output)
 {
 }
 
-void solver::Solver::set_strategy(Strategy* strategy)
+Solver::Solver(WordGraph& word_graph, Config& config) : m_word_graph(word_graph), m_config(config)
+{
+    if (config.type == 'n') 
+    {
+        this->m_strategy = new GenChainAllStrategy();
+    } 
+    else if (config.type == 'w')
+    {
+        this->m_strategy = new GenChainWordLengthStrategy();
+    }
+    else if (config.type == 'c')
+    {
+        this->m_strategy = new GenChainLetterLengthStrategy();
+    }
+    else
+    {
+        this->m_strategy = nullptr;
+    }
+}
+
+void Solver::solve()
 {
 }
 
-void solver::Solver::solve()
+Solver::~Solver()
 {
+    if (this->m_strategy != nullptr)
+    {
+        delete this->m_strategy;
+    }
 }
 
-solver::Solver::~Solver()
+void Strategy::solve(WordGraph& word_graph, Config config, const std::ostream& output)
 {
 }
