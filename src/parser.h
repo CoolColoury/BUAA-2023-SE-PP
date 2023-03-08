@@ -15,7 +15,7 @@ struct Config
     char head = 0;
     char tail = 0;
     char n_head = 0;
-    char type; // 'n' 'w' 'c'
+    char type = 0; // 'n' 'w' 'c'
     bool enable_loop = false;
 };
 

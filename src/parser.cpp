@@ -1,4 +1,5 @@
 #include "parser.h"
+#include "error.h"
 
 void Parser::parse(int argc, char* argv[])
 {
@@ -15,42 +16,42 @@ void Parser::parse(int argc, char* argv[])
 
 void Parser::parse_arg(int argc, char* argv[])
 {
-    for (int arg_i = 0; arg_i < argc; arg_i++) 
+    for (int arg_i = 0; arg_i < argc; arg_i++)
     {
-        if (strcmp(argv[arg_i], "-n"))
+        if (strcmp(argv[arg_i], "-n") == 0)
         {
             m_config.type = 'n';
             arg_i += 1;
             m_filename = argv[arg_i];
         }
-        else if (strcmp(argv[arg_i], "-w"))
+        else if (strcmp(argv[arg_i], "-w") == 0)
         {
             m_config.type = 'w';
             arg_i += 1;
             m_filename = argv[arg_i];
         }
-        else if (strcmp(argv[arg_i], "-c"))
+        else if (strcmp(argv[arg_i], "-c") == 0)
         {
             m_config.type = 'c';
             arg_i += 1;
             m_filename = argv[arg_i];
         }
-        else if (strcmp(argv[arg_i], "-h"))
+        else if (strcmp(argv[arg_i], "-h") == 0)
         {
             arg_i += 1;
             m_config.head = argv[arg_i][0];
         }
-        else if (strcmp(argv[arg_i], "-t"))
+        else if (strcmp(argv[arg_i], "-t") == 0)
         {
             arg_i += 1;
             m_config.tail = argv[arg_i][0];
         }
-        else if (strcmp(argv[arg_i], "-j"))
+        else if (strcmp(argv[arg_i], "-j") == 0)
         {
             arg_i += 1;
             m_config.n_head = argv[arg_i][0];
         }
-        else if (strcmp(argv[arg_i], "-r"))
+        else if (strcmp(argv[arg_i], "-r") == 0)
         {
             m_config.enable_loop = true;
         }
@@ -59,7 +60,57 @@ void Parser::parse_arg(int argc, char* argv[])
 
 void Parser::check_args_error(int argc, char* argv[])
 {
+    Config config;
+
     // TODO
+    for (int arg_i = 0; arg_i < argc; ++arg_i)
+    {
+        if (strcmp(argv[arg_i], "-n") == 0 ||
+            strcmp(argv[arg_i], "-w") == 0 ||
+            strcmp(argv[arg_i], "-c") == 0)
+        {
+            arg_i++;
+            check_bound(arg_i, argc);
+            check_conflicted_argument(config.type);
+            check_filename(argv[arg_i]);
+            config.type = argv[arg_i][1];
+        }
+        else if (strcmp(argv[arg_i], "-h") == 0)
+        {
+            arg_i++;
+            check_bound(arg_i, argc);
+            check_conflicted_argument(config.head);
+            check_is_single_alpha(argv[arg_i]);
+            config.head = argv[arg_i][0];
+        }
+        else if (strcmp(argv[arg_i], "-t") == 0)
+        {
+            arg_i++;
+            check_bound(arg_i, argc);
+            check_conflicted_arguemnt(config.tail);
+            check_is_single_alpha(argv[arg_i]);
+            config.tail = argv[arg_i][0];
+        }
+        else if (strcmp(argv[arg_i], "-j") == 0)
+        {
+            arg_i++;
+            check_bound(arg_i, argc);
+            check_conflicted_argument(config.n_head);
+            check_is_single_alpha(argv[arg_i]);
+            config.n_head = argv[arg_i][0];
+        }
+        else if (strcmp(argv[arg_i], "-r") == 0)
+        {
+            arg_i++;
+            check_bound(arg_i, argc);
+            check_conflicted_argument(config.enable_loop);
+        }
+        else
+        {
+            check_unexcepted_argument();
+        }
+    }
+    check_config_valid(config);
 }
 
 void Parser::parse_words(std::istream& f)
