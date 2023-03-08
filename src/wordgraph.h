@@ -18,7 +18,6 @@ class WordGraph
 private:
     std::map<char, std::vector<Edge>> m_word_graph;
 
-
 public:
     WordGraph(std::vector<std::string> words);
 

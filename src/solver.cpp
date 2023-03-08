@@ -2,6 +2,7 @@
 
 void GenChainAllStrategy::solve(WordGraph& word_graph, Config config, const std::ostream& output)
 {
+    
 }
 
 void GenChainWordLengthStrategy::solve(WordGraph& word_graph, Config config, const std::ostream& output)
