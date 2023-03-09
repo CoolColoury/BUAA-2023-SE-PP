@@ -11,14 +11,14 @@ struct Edge
     int id;
     std::string word;
     int length;
-    char from;
-    char to;
+    int from;
+    int to;
 
     Edge(int id, std::string word) :id(id), word(word)
     {
         length = int(word.size());
-        from = tolower(word.front());
-        to = tolower(word.back());
+        from = tolower(word.front()) - 'a';
+        to = tolower(word.back()) - 'a';
     }
 };
 
@@ -26,12 +26,13 @@ class WordGraph
 {
 private:
     int edge_num = 0;
-    std::map<char, std::vector<Edge>> m_word_graph;
+    std::map<int, std::vector<Edge>> m_word_graph;
 
 public:
-    WordGraph(std::vector<std::string> words);
-    const std::vector<Edge>& get_edges(char node) const { return m_word_graph.at(node); }
-
+    WordGraph(const std::vector<std::string>& words);
+    const std::vector<Edge>& get_edges(int node) const { return m_word_graph.at(node); }
+    bool contain_circle();
+    bool dfs_circle(int now, std::vector<bool>& vis);
 };
 
 
