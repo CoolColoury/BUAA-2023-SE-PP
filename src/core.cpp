@@ -16,7 +16,6 @@ int gen_chains_all(const char* words[], int len, char* result[])
     Solver solver(g, config);
     std::vector<std::string> vector_result;
     solver.solve(vector_result);
-
     for (int i = 0; i < vector_result.size(); i++)
     {
         size_t length = vector_result[i].size() + 1;

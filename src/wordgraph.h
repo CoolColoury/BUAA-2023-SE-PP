@@ -33,6 +33,7 @@ public:
     WordGraph(const std::vector<std::string>& words);
     const std::vector<Edge>& get_edges(int node) const { return m_word_graph.at(node); }
     bool contain_circle();
+    int get_edge_num() const { return edge_num; }
 };
 
 
