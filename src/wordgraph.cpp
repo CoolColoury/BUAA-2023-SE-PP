@@ -2,7 +2,7 @@
 
 WordGraph::WordGraph(const std::vector<std::string>& words)
 {
-    for (int letter = 0; letter < 26; letter++)
+    for (int letter = 0; letter < NUM_NODE; letter++)
     {
         m_word_graph.insert(make_pair(letter, std::vector<Edge>()));
     }
@@ -14,30 +14,72 @@ WordGraph::WordGraph(const std::vector<std::string>& words)
     }
 }
 
-bool WordGraph::contain_circle()
+bool WordGraph::contain_circle() const
 {
-    std::vector<bool> vis(26, false);
-    for (int now = 0; now < 26; now++)
+    std::vector<bool> vis_node(NUM_NODE, false);
+    // 处理自环
+    for (int now = 0; now < NUM_NODE; now++)
     {
-        if (dfs_circle(now, vis))
+        int num_self_loop = 0;
+        for (Edge e : get_edges(now))
+        {
+            if (e.from == e.to)
+            {
+                num_self_loop += 1;
+            }
+        }
+        if (num_self_loop > 1)
         {
             return true;
         }
     }
-    return false;
+
+    return find_circle_by_topo();
 }
 
-bool WordGraph::dfs_circle(int now, std::vector<bool>& vis)
+bool WordGraph::find_circle_by_topo() const
 {
-    vis[now] = true;
-    for (Edge e : get_edges(now))
+    std::vector<int> in_degree(NUM_NODE, 0);
+    for (int node = 0; node < NUM_NODE; node++)
     {
-        const int to = e.to;
-        if (vis[to] || dfs_circle(to, vis))
+        for (Edge e : get_edges(node))
+        {
+            if (e.from != e.to)
+            {
+                in_degree[e.to] += 1;
+            }
+        }
+    }
+    std::queue<int> q;
+    for (int node = 0; node < NUM_NODE; node++)
+    {
+        if (in_degree[node] == 0)
+        {
+            q.push(node);
+        }
+    }
+    while (!q.empty())
+    {
+        int node = q.front();
+        q.pop();
+        for (Edge e : get_edges(node))
+        {
+            if (e.from != e.to)
+            {
+                in_degree[e.to] -= 1;
+                if (in_degree[e.to] == 0)
+                {
+                    q.push(e.to);
+                }
+            }
+        }
+    }
+    for (int node = 0; node < NUM_NODE; node++)
+    {
+        if (in_degree[node] != 0)
         {
             return true;
         }
     }
-    vis[now] = false;
     return false;
 }
