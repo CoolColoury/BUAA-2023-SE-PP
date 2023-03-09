@@ -1,7 +1,7 @@
 #pragma once
 #pragma once
 #include "wordgraph.h"
-#include "parser.h"
+#include "config.h"
 #include <iostream>
 #ifndef _SOLVER
 
@@ -38,7 +38,8 @@ private:
 
 public:
     Solver(WordGraph& word_graph, Config& config);
-    void solve();
+    void solve(std::ostream& output);
+    void solve(std::vector<std::string>& output);
 
     ~Solver();
 };

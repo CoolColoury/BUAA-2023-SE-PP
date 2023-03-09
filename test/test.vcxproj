@@ -163,6 +163,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="test.cpp" />
+    <ClCompile Include="test_core.cpp" />
     <ClCompile Include="test_parser.cpp" />
   </ItemGroup>
   <ItemGroup>
