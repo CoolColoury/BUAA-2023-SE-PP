@@ -11,6 +11,6 @@ int main(int argc, char* argv[])
     parser.parse(argc, argv);
     WordGraph graph(parser.get_words());
     Solver solver(graph, parser.get_config());
-    solver.solve();
+    // solver.solve();
     return 0;
 }
