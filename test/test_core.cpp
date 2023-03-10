@@ -2,7 +2,6 @@
 #include "CppUnitTest.h"
 #include "../src/core.h"
 #include "../src/core.cpp"
-#include "../src/wordgraph.cpp"
 #include "../src/solver.cpp"
 #include "sstream"
 

@@ -29,13 +29,18 @@ private:
     int edge_num = 0;
     std::map<int, std::vector<Edge>> m_word_graph;
     static const int NUM_NODE = 26;
+    std::vector<int> topo_list;
 
-    bool find_circle_by_topo() const;
 
 public:
     WordGraph(const std::vector<std::string>& words);
+    int get_edge_num() const { return edge_num; }
     const std::vector<Edge>& get_edges(int node) const { return m_word_graph.at(node); }
-    bool contain_circle() const;
+    bool contain_circle();
+    bool make_topo_list();
+    
+    // ÎÞ»·Í¼¼ò»¯
+    void simplify_dag();
 };
 
 
