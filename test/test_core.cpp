@@ -55,7 +55,7 @@ namespace test
 
         TEST_METHOD(TestCoreGenChainsAll2) {
             const char* words[] = { "aa", "bb", "ab" };
-            const char* ans[] = {"3", "aa ab", "aa ab bb", "ab bb" };
+            const char* ans[] = { "3", "aa ab", "aa ab bb", "ab bb" };
             test_gen_chains_all(words, 3, ans, 4);
         }
 
@@ -110,42 +110,42 @@ namespace test
         TEST_METHOD(TestCoreGenChainChar) {
             const char* words[] = { "algebra", "apple", "zoo", "elephant", "under", "fox", "dog", "moon", "leaf", "trick", "pseudopseudohypoparathyroidism" };
             const char* ans[] = { "pseudopseudohypoparathyroidism", "moon" };
-            test_gen_chain_word(words, 11, ans, 2, 0, 0, 0, false);
+            test_gen_chain_char(words, 11, ans, 2, 0, 0, 0, false);
         }
 
         // '-h'
         TEST_METHOD(TestCoreGenChainCharWithH) {
             const char* words[] = { "algebra", "apple", "zoo", "elephant", "under", "fox", "dog", "moon", "leaf", "trick", "pseudopseudohypoparathyroidism" };
             const char* ans[] = { "algebra", "apple", "elephant", "trick" };
-            test_gen_chain_word(words, 11, ans, 4, 'a', 0, 0, false);
+            test_gen_chain_char(words, 11, ans, 4, 'a', 0, 0, false);
         }
 
         // '-t'
         TEST_METHOD(TestCoreGenChainCharWithT) {
             const char* words[] = { "algebra", "apple", "zoo", "elephant", "under", "fox", "dog", "moon", "leaf", "trick", "pseudopseudohypoparathyroidism" };
             const char* ans[] = { "algebra", "apple", "elephant", "trick" };
-            test_gen_chain_word(words, 11, ans, 4, 0, 'k', 0, false);
+            test_gen_chain_char(words, 11, ans, 4, 0, 'k', 0, false);
         }
 
         // '-h and -t'
         TEST_METHOD(TestCoreGenChainCharWithHT) {
             const char* words[] = { "algebra", "apple", "zoo", "elephant", "under", "fox", "dog", "moon", "leaf", "trick", "pseudopseudohypoparathyroidism" };
             const char* ans[] = { "algebra", "apple", "elephant" };
-            test_gen_chain_word(words, 11, ans, 3, 'a', 't', 0, false);
+            test_gen_chain_char(words, 11, ans, 3, 'a', 't', 0, false);
         }
 
         // '-r'
         TEST_METHOD(TestCoreGenChainCharWithR) {
             const char* words[] = { "element", "heaven", "table", "teach", "talk" };
             const char* ans[] = { "table", "element", "teach", "heaven" };
-            test_gen_chain_word(words, 5, ans, 4, 0, 0, 0, true);
+            test_gen_chain_char(words, 5, ans, 4, 0, 0, 0, true);
         }
 
         // '-j'
         TEST_METHOD(TestCoreGenChainCharWithJ) {
             const char* words[] = { "element", "heaven", "able", "teach", "talk" };
             const char* ans[] = { "teach", "heaven" };
-            test_gen_chain_word(words, 11, ans, 2, 0, 0, 'e', false);
+            test_gen_chain_char(words, 5, ans, 2, 0, 0, 'e', false);
         }
     };
 }

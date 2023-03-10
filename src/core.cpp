@@ -29,7 +29,7 @@ int gen_chain_word(const char* words[], int len, char* result[], char head, char
 {
     std::vector<std::string> vector_words(words, words + len);
     WordGraph g(vector_words);
-    Config config = { head, tail, n_head, 'c', enable_loop };
+    Config config = { head, tail, n_head, 'w', enable_loop };
 
     Solver solver(g, config);
     std::vector<std::string> vector_result;
