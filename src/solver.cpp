@@ -173,11 +173,25 @@ Solver::Solver(WordGraph& word_graph, Config& config) : m_word_graph(word_graph)
     }
     else if (config.type == 'w')
     {
-        this->m_strategy = new GenChainWordLengthStrategy();
+        if (config.enable_loop)
+        {
+            this->m_strategy = new GenChainWordLengthStrategy();
+        }
+        else
+        {
+            this->m_strategy = new GenChainWordOnDFAStrategy();
+        }
     }
     else if (config.type == 'c')
     {
-        this->m_strategy = new GenChainLetterLengthStrategy();
+        if (config.enable_loop)
+        {
+            this->m_strategy = new GenChainLetterLengthStrategy();
+        }
+        else
+        {
+            this->m_strategy = new GenChainCharOnDFAStrategy();
+        }
     }
     else
     {
@@ -215,5 +229,133 @@ void Strategy::print_vector(std::ostream& output, std::vector<std::string>& edge
     for (auto it = edges.begin(); it != edges.end(); ++it)
     {
         output << *it << '\n';
+    }
+}
+
+void GenChainWordOnDFAStrategy::solve(WordGraph& word_graph, Config& config, std::ostream& output)
+{
+    std::vector<int> dp(26, 0);
+    std::vector<Edge const*> record(26, nullptr);
+    std::vector<Edge const*> record_self_loop(26, nullptr);
+    for (auto it = word_graph.get_topo_list().rbegin(); it != word_graph.get_topo_list().rend(); ++it)
+    {
+        int now = *it;
+        if (config.n_head == now + 'a')
+        {
+            continue;
+        }
+        for (const Edge& e : word_graph.get_edges(now))
+        {
+            if (e.from == e.to)
+            {
+                record_self_loop[e.from] = &e;
+            }
+            if (config.tail != 0 && !((e.to + 'a' == config.tail) || dp[e.to] != 0))
+            {
+                continue;
+            }
+            else if (dp[e.from] < dp[e.to] + 1)
+            {
+                dp[e.from] = dp[e.to] + 1;
+                record[e.from] = &e;
+            }
+        }
+        if (record_self_loop[now] != nullptr && (config.tail == 0 || ((now + 'a' == config.tail) || dp[now] != 0)))
+        {
+            dp[now] = dp[now] + record_self_loop[now]->length;
+        }
+    }
+    int begin = -1;
+    int max_length = 0;
+    for (int i = 0; i < 26; i++)
+    {
+        if (max_length < dp[i])
+        {
+            begin = i;
+            max_length = dp[i];
+        }
+    }
+    if (config.head != 0)
+    {
+        begin = config.head - 'a';
+    }
+    if (begin != -1)
+    {
+        Edge const* e = record[begin];
+        std::vector<std::string> ans;
+        while (e != nullptr)
+        {
+            if (record_self_loop[e->from] != nullptr)
+            {
+                ans.push_back(record_self_loop[e->from]->word);
+            }
+            ans.push_back(e->word);
+            e = record[e->to];
+        }
+        print_vector(output, ans);
+    }
+}
+
+void GenChainCharOnDFAStrategy::solve(WordGraph& word_graph, Config& config, std::ostream& output)
+{
+    std::vector<int> dp(26, 0);
+    std::vector<Edge const*> record(26, nullptr);
+    std::vector<Edge const*> record_self_loop(26, nullptr);
+    for (auto it = word_graph.get_topo_list().rbegin(); it != word_graph.get_topo_list().rend(); ++it)
+    {
+        int now = *it;
+        if (config.n_head == now + 'a')
+        {
+            continue;
+        }
+        for (const Edge& e : word_graph.get_edges(now))
+        {
+            if (e.from == e.to)
+            {
+                record_self_loop[e.from] = &e;
+            }
+            if (config.tail != 0 && !((e.to + 'a' == config.tail) || dp[e.to] != 0))
+            {
+                continue;
+            }
+            else if (dp[e.from] < dp[e.to] + e.length)
+            {
+                dp[e.from] = dp[e.to] + e.length;
+                record[e.from] = &e;
+            }
+        }
+        if (record_self_loop[now] != nullptr && (config.tail == 0 || ((now + 'a' == config.tail) || dp[now] != 0)))
+        {
+            dp[now] = dp[now] + record_self_loop[now]->length;
+        }
+    }
+    int begin = -1;
+    int max_length = 0;
+    for (int i = 0; i < 26; i++)
+    {
+        if (max_length < dp[i])
+        {
+            begin = i;
+            max_length = dp[i];
+        }
+    }
+    if (config.head != 0)
+    {
+        begin = config.head - 'a';
+    }
+    if (begin != -1)
+    {
+        Edge const* e = record[begin];
+        std::vector<std::string> ans;
+        while (e != nullptr)
+        {
+            if (record_self_loop[e->from] != nullptr)
+            {
+                ans.push_back(record_self_loop[e->from]->word);
+            }
+            ans.push_back(e->word);
+            e = record[e->to];
+        }
+        print_vector(output, ans);
     }
 }

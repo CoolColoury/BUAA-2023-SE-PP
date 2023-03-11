@@ -1,6 +1,10 @@
 #include <vector>
-#include <vector>
+#include <sstream>
+#include <cstring>
 #include <string>
+#include "config.h"
+#include "wordgraph.h"
+#include "solver.h"
 #include "config.h"
 
 #ifndef _CORE

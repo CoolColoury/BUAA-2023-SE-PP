@@ -1,17 +1,11 @@
 #include "core.h"
-#include "wordgraph.h"
-#include "solver.h"
-#include "config.h"
-#include <sstream>
-#include <cstring>
-#include <string>
 
 int gen_chains_all(const char* words[], int len, char* result[])
 {
     std::vector<std::string> vector_words(words, words + len);
-    WordGraph g(vector_words);
     Config config;
     config.type = 'n';
+    WordGraph g(vector_words, config);
 
     Solver solver(g, config);
     std::vector<std::string> vector_result;
@@ -28,8 +22,8 @@ int gen_chains_all(const char* words[], int len, char* result[])
 int gen_chain_word(const char* words[], int len, char* result[], char head, char tail, char n_head, bool enable_loop)
 {
     std::vector<std::string> vector_words(words, words + len);
-    WordGraph g(vector_words);
     Config config = { head, tail, n_head, 'w', enable_loop };
+    WordGraph g(vector_words, config);
 
     Solver solver(g, config);
     std::vector<std::string> vector_result;
@@ -47,8 +41,8 @@ int gen_chain_word(const char* words[], int len, char* result[], char head, char
 int gen_chain_char(const char* words[], int len, char* result[], char head, char tail, char n_head, bool enable_loop)
 {
     std::vector<std::string> vector_words(words, words + len);
-    WordGraph g(vector_words);
     Config config = { head, tail, n_head, 'c', enable_loop };
+    WordGraph g(vector_words, config);
 
     Solver solver(g, config);
     std::vector<std::string> vector_result;

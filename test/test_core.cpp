@@ -2,7 +2,9 @@
 #include "CppUnitTest.h"
 #include "../src/core.h"
 #include "../src/core.cpp"
+#include "../src/solver.h"
 #include "../src/solver.cpp"
+#include "../src/wordgraph.h"
 #include "sstream"
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;

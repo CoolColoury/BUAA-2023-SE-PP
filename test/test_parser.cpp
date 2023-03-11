@@ -2,6 +2,7 @@
 #include "CppUnitTest.h"
 #include "../src/parser.h"
 #include "../src/parser.cpp"
+#include "../src/error.cpp"
 #include "sstream"
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;

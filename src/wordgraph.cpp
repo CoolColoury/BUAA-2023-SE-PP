@@ -8,10 +8,23 @@ WordGraph::WordGraph(const std::vector<std::string>& words)
     }
     for (std::string word : words)
     {
-        // TODO释放edge，需要析构函数
         Edge edge = Edge(edge_num++, word);
         m_word_graph[edge.from].push_back(edge);
     }
+}
+
+WordGraph::WordGraph(const std::vector<std::string>& words, Config& config)
+{
+    for (int letter = 0; letter < NUM_NODE; letter++)
+    {
+        m_word_graph.insert(make_pair(letter, std::vector<Edge>()));
+    }
+    for (std::string word : words)
+    {
+        Edge edge = Edge(edge_num++, word);
+        m_word_graph[edge.from].push_back(edge);
+    }
+    parseConfig(config);
 }
 
 // 将会生成topo_list
@@ -89,6 +102,18 @@ bool WordGraph::make_topo_list()
         }
     }
     return true;
+}
+
+void WordGraph::parseConfig(Config& config)
+{
+    if (!config.enable_loop)
+    {
+        if (contain_circle())
+        {
+            throw new invalid_argument();
+        }
+        make_topo_list();
+    }
 }
 
 void WordGraph::simplify_dag()

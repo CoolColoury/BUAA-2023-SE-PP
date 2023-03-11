@@ -3,6 +3,8 @@
 #include <map>
 #include <vector>
 #include <queue>
+#include "config.h"
+#include "error.h"
 
 #ifndef _WORDGRAPH
 #define WORDGRAPH
@@ -34,10 +36,14 @@ private:
 
 public:
     WordGraph(const std::vector<std::string>& words);
+    WordGraph(const std::vector<std::string>& words, Config& config);
     int get_edge_num() const { return edge_num; }
-    const std::vector<Edge>& get_edges(int node) const { return m_word_graph.at(node); }
     bool contain_circle();
     bool make_topo_list();
+    void parseConfig(Config& config);
+
+    const std::vector<Edge>& get_edges(int node) const { return m_word_graph.at(node); }
+    const std::vector<int>& get_topo_list() const { return topo_list; };
     
     // ÎÞ»·Í¼¼ò»¯
     void simplify_dag();

@@ -141,6 +141,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="core.cpp" />
+    <ClCompile Include="error.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="parser.cpp" />
     <ClCompile Include="solver.cpp" />
@@ -149,6 +150,7 @@
   <ItemGroup>
     <ClInclude Include="config.h" />
     <ClInclude Include="core.h" />
+    <ClInclude Include="error.h" />
     <ClInclude Include="parser.h" />
     <ClInclude Include="solver.h" />
     <ClInclude Include="wordgraph.h" />
