@@ -113,6 +113,10 @@ void WordGraph::parseConfig(Config& config)
             throw new invalid_argument();
         }
         make_topo_list();
+        if (config.type != 'n')
+        {
+            simplify_dag();
+        }
     }
 }
 
@@ -126,7 +130,7 @@ void WordGraph::simplify_dag()
         {
             if (map.count(e.to) != 0)
             {
-                if (map[e.to].size() < e.length)
+                if (map[e.to].size() < e.word.size())
                 {
                     map[e.to] = e.word;
                 }
@@ -143,10 +147,9 @@ void WordGraph::simplify_dag()
     }
 
     edge_num = 0;
-    m_word_graph.clear();
     for (int letter = 0; letter < NUM_NODE; letter++)
     {
-        m_word_graph.insert(make_pair(letter, std::vector<Edge>()));
+        m_word_graph[letter].clear();
     }
     for (std::string word : new_words)
     {

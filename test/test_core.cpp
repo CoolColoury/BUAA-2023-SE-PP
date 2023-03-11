@@ -105,6 +105,13 @@ namespace test
             test_gen_chain_word(words, 5, ans, 2, 0, 0, 'e', false);
         }
 
+        // ≤‚ ‘simplify∑Ω∑®
+        TEST_METHOD(TestCoreGenChainWordDuplicatedEdgeWithJ) {
+            const char* words[] = { "element", "heaven", "heaveaan","able", "teach", "talk" };
+            const char* ans[] = { "teach", "heaveaan" };
+            test_gen_chain_word(words, 5, ans, 2, 0, 0, 'e', false);
+        }
+
         /*-----------------------------*/
 
         // '-c'
