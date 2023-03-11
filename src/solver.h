@@ -36,12 +36,7 @@ class GenChainLetterLengthStrategy : public Strategy
     void solve(WordGraph& word_graph, Config& config, std::ostream& output);
 };
 
-class GenChainWordOnDFAStrategy : public Strategy
-{
-    void solve(WordGraph& word_graph, Config& config, std::ostream& output);
-};
-
-class GenChainCharOnDFAStrategy : public Strategy
+class GenChainMaxOnDFAStrategy : public Strategy
 {
     void solve(WordGraph& word_graph, Config& config, std::ostream& output);
 };

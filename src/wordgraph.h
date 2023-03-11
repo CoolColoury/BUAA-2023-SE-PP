@@ -23,6 +23,13 @@ struct Edge
         from = tolower(word.front()) - 'a';
         to = tolower(word.back()) - 'a';
     }
+
+    Edge(int id, std::string word, char type) :id(id), word(word)
+    {
+        length = type == 'w' ? 1 : int(word.size());
+        from = tolower(word.front()) - 'a';
+        to = tolower(word.back()) - 'a';
+    }
 };
 
 class WordGraph

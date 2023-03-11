@@ -21,7 +21,7 @@ WordGraph::WordGraph(const std::vector<std::string>& words, Config& config)
     }
     for (std::string word : words)
     {
-        Edge edge = Edge(edge_num++, word);
+        Edge edge = Edge(edge_num++, word, config.type);
         m_word_graph[edge.from].push_back(edge);
     }
     parseConfig(config);
