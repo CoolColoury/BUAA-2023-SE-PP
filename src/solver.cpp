@@ -17,11 +17,11 @@ void GenChainsAllStrategy::dfs_circle(int now, std::vector<bool>& vis, std::vect
     }
 }
 
-void GenChainsAllStrategy::solve(WordGraph& word_graph, Config& config, std::ostream& output)
+void GenChainsAllStrategy::solve(WordGraph& word_graph, Config& config, std::vector<std::string>& ans)
 {
     int num_node = 26;
     std::vector<bool> vis(word_graph.get_edge_num(), false);
-    std::vector<std::string> ans;
+    ans.push_back(std::to_string(0));
     for (int node = 0; node < num_node; node++)
     {
         for (Edge e : word_graph.get_edges(node))
@@ -34,8 +34,7 @@ void GenChainsAllStrategy::solve(WordGraph& word_graph, Config& config, std::ost
             edges.pop_back();
         }
     }
-    output << ans.size() << '\n';
-    print_vector(output, ans);
+    ans[0] = std::to_string(ans.size() - 1);
 }
 
 void GenChainsAllStrategy::add_chain(std::vector<std::string>& ans, std::vector<std::string>& words)
@@ -79,11 +78,10 @@ void GenChainWordLengthStrategy::dfs_circle(int now, std::vector<bool>& vis, std
     }
 }
 
-void GenChainWordLengthStrategy::solve(WordGraph& word_graph, Config& config, std::ostream& output)
+void GenChainWordLengthStrategy::solve(WordGraph& word_graph, Config& config, std::vector<std::string>& ans)
 {
     int num_node = 26;
     std::vector<bool> vis(word_graph.get_edge_num(), false);
-    std::vector<std::string> ans;
     for (int node = 0; node < num_node; node++)
     {
         // guard
@@ -105,7 +103,6 @@ void GenChainWordLengthStrategy::solve(WordGraph& word_graph, Config& config, st
             edges.pop_back();
         }
     }
-    print_vector(output, ans);
 }
 
 void GenChainLetterLengthStrategy::dfs_circle(int now, std::vector<bool>& vis, std::vector<std::string>& words, WordGraph& word_graph, Config& config, std::vector<std::string>& ans, int words_len, int& ans_len)
@@ -135,11 +132,10 @@ void GenChainLetterLengthStrategy::dfs_circle(int now, std::vector<bool>& vis, s
     }
 }
 
-void GenChainLetterLengthStrategy::solve(WordGraph& word_graph, Config& config, std::ostream& output)
+void GenChainLetterLengthStrategy::solve(WordGraph& word_graph, Config& config, std::vector<std::string>& ans)
 {
     int num_node = 26;
     std::vector<bool> vis(word_graph.get_edge_num(), false);
-    std::vector<std::string> ans;
     int ans_len = 0;
     for (int node = 0; node < num_node; node++)
     {
@@ -162,7 +158,14 @@ void GenChainLetterLengthStrategy::solve(WordGraph& word_graph, Config& config, 
             edges.pop_back();
         }
     }
-    print_vector(output, ans);
+}
+
+void Solver::print_vector(std::ostream& output, std::vector<std::string>& ans)
+{
+    for (auto it = ans.begin(); it != ans.end(); ++it)
+    {
+        output << *it << '\n';
+    }
 }
 
 Solver::Solver(WordGraph& word_graph, Config& config) : m_word_graph(word_graph), m_config(config)
@@ -201,19 +204,15 @@ Solver::Solver(WordGraph& word_graph, Config& config) : m_word_graph(word_graph)
 
 void Solver::solve(std::ostream& output)
 {
-    m_strategy->solve(m_word_graph, m_config, output);
+    std::vector<std::string> ans;
+    m_strategy->solve(m_word_graph, m_config, ans);
+    print_vector(output, ans);
 }
 
 void Solver::solve(std::vector<std::string>& output)
 {
-    std::ostringstream oss;
-    solve(oss);
-    std::istringstream iss(oss.str());
-    std::string word;
-    while (getline(iss, word))
-    {
-        output.push_back(word);
-    }
+
+    m_strategy->solve(m_word_graph, m_config, output);
 }
 
 Solver::~Solver()
@@ -224,15 +223,7 @@ Solver::~Solver()
     }
 }
 
-void Strategy::print_vector(std::ostream& output, std::vector<std::string>& edges)
-{
-    for (auto it = edges.begin(); it != edges.end(); ++it)
-    {
-        output << *it << '\n';
-    }
-}
-
-void GenChainMaxOnDFAStrategy::solve(WordGraph& word_graph, Config& config, std::ostream& output)
+void GenChainMaxOnDFAStrategy::solve(WordGraph& word_graph, Config& config, std::vector<std::string>& ans)
 {
     std::vector<int> dp(26, 0);
     std::vector<Edge const*> record(26, nullptr);
@@ -282,7 +273,6 @@ void GenChainMaxOnDFAStrategy::solve(WordGraph& word_graph, Config& config, std:
     if (begin != -1)
     {
         Edge const* e = record[begin];
-        std::vector<std::string> ans;
         while (e != nullptr)
         {
             if (record_self_loop[e->from] != nullptr)
@@ -292,6 +282,5 @@ void GenChainMaxOnDFAStrategy::solve(WordGraph& word_graph, Config& config, std:
             ans.push_back(e->word);
             e = record[e->to];
         }
-        print_vector(output, ans);
     }
 }

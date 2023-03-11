@@ -14,7 +14,10 @@ int gen_chains_all(const char* words[], int len, char* result[])
     {
         size_t length = vector_result[i].size() + 1;
         result[i] = (char*)malloc(length);
-        strcpy_s(result[i], length, vector_result[i].c_str());
+        if (result[i])
+        {
+            strcpy_s(result[i], length, vector_result[i].c_str());
+        }
     }
     return int(vector_result.size());
 }
@@ -33,7 +36,10 @@ int gen_chain_word(const char* words[], int len, char* result[], char head, char
     {
         size_t length = vector_result[i].size() + 1;
         result[i] = (char*)malloc(length);
-        strcpy_s(result[i], length, vector_result[i].c_str()); // TODO£º²»·ûºÏ¹æ·¶£¿£¿£¿£¿£¿
+        if (result[i])
+        {
+            strcpy_s(result[i], length, vector_result[i].c_str());
+        }
     }
     return int(vector_result.size());
 }
@@ -52,7 +58,10 @@ int gen_chain_char(const char* words[], int len, char* result[], char head, char
     {
         size_t length = vector_result[i].size() + 1;
         result[i] = (char*)malloc(length);
-        strcpy_s(result[i], length, vector_result[i].c_str());
+        if (result[i])
+        {
+            strcpy_s(result[i], length, vector_result[i].c_str());
+        }
     }
     return int(vector_result.size());
 }
