@@ -20,6 +20,10 @@ void check_conflicted_arguemnt(bool origin)
 
 void check_config_valid(const Config& config)
 {
+    if (config.type == 0)
+    {
+        throw new missing_argument();
+    }
     if (config.type == 'n')
     {
         if (config.head || config.tail || config.n_head || config.enable_loop)
@@ -70,4 +74,17 @@ void check_head_or_tail_args(char& origin, const char* arg)
 void check_unexcepted_argument()
 {
     throw new unexpected_argument();
+}
+
+void check_ring_exception()
+{
+    throw new ring_check_exception();
+}
+
+void check_too_much_result(size_t len)
+{
+    if (len >= 20000)
+    {
+        throw new too_much_result();
+    }
 }
