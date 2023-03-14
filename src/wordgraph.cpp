@@ -1,18 +1,5 @@
 #include "wordgraph.h"
 
-WordGraph::WordGraph(const std::vector<std::string>& words)
-{
-    for (int letter = 0; letter < NUM_NODE; letter++)
-    {
-        m_word_graph.insert(make_pair(letter, std::vector<Edge>()));
-    }
-    for (std::string word : words)
-    {
-        Edge edge = Edge(edge_num++, word);
-        m_word_graph[edge.from].push_back(edge);
-    }
-}
-
 WordGraph::WordGraph(const std::vector<std::string>& words, Config& config)
 {
     for (int letter = 0; letter < NUM_NODE; letter++)
@@ -115,12 +102,12 @@ void WordGraph::parseConfig(Config& config)
         make_topo_list();
         if (config.type != 'n')
         {
-            simplify_dag();
+            simplify_dag(config.type);
         }
     }
 }
 
-void WordGraph::simplify_dag()
+void WordGraph::simplify_dag(char type)
 {
     std::vector<std::string> new_words;
     for (int i = 0; i < NUM_NODE; i++) 
@@ -153,7 +140,7 @@ void WordGraph::simplify_dag()
     }
     for (std::string word : new_words)
     {
-        Edge edge = Edge(edge_num++, word);
+        Edge edge = Edge(edge_num++, word, type);
         m_word_graph[edge.from].push_back(edge);
     }
 }

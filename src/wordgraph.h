@@ -17,13 +17,6 @@ struct Edge
     int from;
     int to;
 
-    Edge(int id, std::string word) :id(id), word(word)
-    {
-        length = int(word.size());
-        from = tolower(word.front()) - 'a';
-        to = tolower(word.back()) - 'a';
-    }
-
     Edge(int id, std::string word, char type) :id(id), word(word)
     {
         length = type == 'w' ? 1 : int(word.size());
@@ -42,7 +35,6 @@ private:
 
 
 public:
-    WordGraph(const std::vector<std::string>& words);
     WordGraph(const std::vector<std::string>& words, Config& config);
     int get_edge_num() const { return edge_num; }
     bool contain_circle();
@@ -53,7 +45,7 @@ public:
     const std::vector<int>& get_topo_list() const { return topo_list; };
     
     // ÎÞ»·Í¼¼ò»¯
-    void simplify_dag();
+    void simplify_dag(char type);
 };
 
 
