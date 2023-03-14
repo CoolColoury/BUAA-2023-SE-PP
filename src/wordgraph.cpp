@@ -105,6 +105,10 @@ void WordGraph::parseConfig(Config& config)
             simplify_dag(config.type);
         }
     }
+    else 
+    {
+        make_graph2(config.type);
+    }
 }
 
 void WordGraph::simplify_dag(char type)
@@ -143,4 +147,31 @@ void WordGraph::simplify_dag(char type)
         Edge edge = Edge(edge_num++, word, type);
         m_word_graph[edge.from].push_back(edge);
     }
+}
+
+void WordGraph::make_graph2(char type)
+{
+    for (int from = 0; from < NUM_NODE; from++)
+    {
+        m_word_graph2.insert(make_pair(from, std::map<int, std::vector<Edge>>()));
+        for (int to = 0; to < NUM_NODE; to++)
+        {
+            m_word_graph2[from].insert(make_pair(to, std::vector<Edge>()));
+        }
+        std::set<int> tos;
+        for (Edge e : get_edges(from))
+        {
+            int to = e.to;
+            m_word_graph2[from][to].push_back(e);
+            tos.insert(to);
+        }
+        for (int to : tos) {
+            std::sort(m_word_graph2[from][to].begin(), m_word_graph2[from][to].end(), cmp_edge);
+        }
+    }
+}
+
+bool cmp_edge(const Edge& e1, const Edge& e2)
+{
+    return e1.length > e2.length;
 }

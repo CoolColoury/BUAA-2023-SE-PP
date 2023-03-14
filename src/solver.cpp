@@ -181,7 +181,7 @@ Solver::Solver(WordGraph& word_graph, Config& config) : m_word_graph(word_graph)
     {
         if (config.enable_loop)
         {
-            this->m_strategy = new GenChainWordLengthStrategy();
+            this->m_strategy = new GenChainMaxOnMDGStrategy();
         }
         else
         {
@@ -192,7 +192,7 @@ Solver::Solver(WordGraph& word_graph, Config& config) : m_word_graph(word_graph)
     {
         if (config.enable_loop)
         {
-            this->m_strategy = new GenChainLetterLengthStrategy();
+            this->m_strategy = new GenChainMaxOnMDGStrategy();
         }
         else
         {
@@ -214,7 +214,6 @@ void Solver::solve(std::ostream& output)
 
 void Solver::solve(std::vector<std::string>& output)
 {
-
     m_strategy->solve(m_word_graph, m_config, output);
 }
 
@@ -285,5 +284,88 @@ void GenChainMaxOnDFAStrategy::solve(WordGraph& word_graph, Config& config, std:
             ans.push_back(e->word);
             e = record[e->to];
         }
+    }
+}
+
+void GenChainMaxOnMDGStrategy::dfs_circle(int now, std::vector<bool>& vis, std::vector<std::string>& words, WordGraph& word_graph, Config& config, std::vector<std::string>& ans, int words_len, int& ans_len)
+{
+    bool dfs_self_loop = false;
+    for (Edge e : word_graph.get_edges(now, now)) {
+        if (!vis[e.id])
+        {
+            words.push_back(e.word);
+            if ((config.tail == 0) || (config.tail == (e.to + 'a')))
+            {
+                if (ans_len < words_len + e.length)
+                {
+                    ans = words;
+                    ans_len = words_len + e.length;
+                }
+            }
+            vis[e.id] = true;
+            dfs_circle(e.to, vis, words, word_graph, config, ans, words_len + e.length, ans_len);
+            vis[e.id] = false;
+            words.pop_back();
+            dfs_self_loop = true;
+            break;
+        }
+    }
+    if (!dfs_self_loop) {
+        int num_node = 26;
+        for (int to = 0; to < num_node; to++) {
+            if (to == now)
+            {
+                continue;
+            }
+            for (Edge e : word_graph.get_edges(now, to))
+            {
+                if (!vis[e.id])
+                {
+                    words.push_back(e.word);
+                    if ((config.tail == 0) || (config.tail == (e.to + 'a')))
+                    {
+                        if (ans_len < words_len + e.length)
+                        {
+                            ans = words;
+                            ans_len = words_len + e.length;
+                        }
+                    }
+                    if (e.to != config.n_head + 'a')
+                    {
+                        vis[e.id] = true;
+                        dfs_circle(to, vis, words, word_graph, config, ans, words_len + e.length, ans_len);
+                        vis[e.id] = false;
+                    }
+                    
+                    words.pop_back();
+                    break;
+                }
+            }
+        }
+    }
+}
+
+void GenChainMaxOnMDGStrategy::solve(WordGraph& word_graph, Config& config, std::vector<std::string>& ans)
+{
+    int num_node = 26;
+    std::vector<bool> vis(word_graph.get_edge_num(), false);
+    int ans_len = 0;
+    for (int start = 0; start < num_node; start++)
+    {
+        // guard
+        if (config.n_head == (start + 'a'))
+        {
+            continue;
+        }
+        else if (config.head != 0 && config.head != (start + 'a'))
+        {
+            continue;
+        }
+        std::vector<std::string> edges;
+        dfs_circle(start, vis, edges, word_graph, config, ans, 0, ans_len);
+    }
+    if (ans.size() == 1)
+    {
+        ans.clear();
     }
 }

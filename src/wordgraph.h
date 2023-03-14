@@ -1,6 +1,7 @@
 #pragma once
 #include <string>
 #include <map>
+#include <set>
 #include <vector>
 #include <queue>
 #include "config.h"
@@ -25,11 +26,14 @@ struct Edge
     }
 };
 
+bool cmp_edge(const Edge& e1, const Edge& e2);
+
 class WordGraph
 {
 private:
     int edge_num = 0;
     std::map<int, std::vector<Edge>> m_word_graph;
+    std::map<int, std::map<int, std::vector<Edge>>> m_word_graph2;
     static const int NUM_NODE = 26;
     std::vector<int> topo_list;
 
@@ -42,10 +46,13 @@ public:
     void parseConfig(Config& config);
 
     const std::vector<Edge>& get_edges(int node) const { return m_word_graph.at(node); }
+    const std::vector<Edge>& get_edges(int from, int to) const { return m_word_graph2.at(from).at(to); }
     const std::vector<int>& get_topo_list() const { return topo_list; };
     
     // ÎÞ»·Í¼¼ò»¯
     void simplify_dag(char type);
+
+    void make_graph2(char type);
 };
 
 
