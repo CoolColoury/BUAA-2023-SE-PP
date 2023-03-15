@@ -24,24 +24,71 @@ namespace test
                     Assert::AreEqual(strcmp(ans[i], result[i]), 0);
                 }
             }
+            free(result);
         }
 
         void test_gen_chain_word(const char* words[], int len, const char* ans[], int ans_len, char head, char tail, char n_head, bool enable_loop) {
             char** result = (char**)malloc(10000);
             int out_len = gen_chain_word(words, len, result, head, tail, n_head, enable_loop);
+            Assert::IsTrue(check_valid(result, out_len, head, tail, n_head, enable_loop));
             Assert::AreEqual(ans_len, out_len);
-            for (int i = 0; i < ans_len; i++) {
-                if (result != nullptr) Assert::AreEqual(strcmp(ans[i], result[i]), 0);
-            }
+            free(result);
         }
 
         void test_gen_chain_char(const char* words[], int len, const char* ans[], int ans_len, char head, char tail, char n_head, bool enable_loop) {
             char** result = (char**)malloc(10000);
             int out_len = gen_chain_char(words, len, result, head, tail, n_head, enable_loop);
-            Assert::AreEqual(ans_len, out_len);
-            for (int i = 0; i < ans_len; i++) {
-                if (result != nullptr) Assert::AreEqual(strcmp(ans[i], result[i]), 0);
+            Assert::IsTrue(check_valid(result, out_len, head, tail, n_head, enable_loop));
+            Assert::AreEqual(get_length(ans, ans_len), get_length(result, out_len));
+            free(result);
+        }
+
+        int get_length(char** words, int len)
+        {
+            int result = 0;
+            for (int i = 0; i < len; i++)
+            {
+                result += strlen(words[i]);
             }
+            return result;
+        }
+
+        int get_length(const char* words[], int len)
+        {
+            int result = 0;
+            for (int i = 0; i < len; i++) 
+            {
+                result += strlen(words[i]);
+            }
+            return result;
+        }
+
+        bool check_valid(char** words, int len, char head, char tail, char n_head, bool enable_loop)
+        {
+            if (len == 0) 
+            {
+                return true;
+            }
+            if (n_head == words[0][0])
+            {
+                return false;
+            }
+            else if (head != 0 && head != words[0][0]) 
+            {
+                return false;
+            }
+            else if (tail != 0 && tail != words[len - 1][strlen(words[len - 1]) - 1])
+            {
+                return false;
+            }
+            for(int i = 1; i < len; i++)
+            {
+                if (words[i][0] != words[i - 1][strlen(words[i - 1]) - 1])
+                {
+                    return false;
+                }
+            }
+            return true;
         }
 
     public:
@@ -153,6 +200,18 @@ namespace test
             const char* words[] = { "element", "heaven", "table", "tablet", "teach", "talk" };
             const char* ans[] = { "tablet", "table", "element", "teach", "heaven" };
             test_gen_chain_char(words, 6, ans, 5, 0, 0, 0, true);
+        }
+
+        TEST_METHOD(TestCoreGenChainCharWithR3) {
+            const char* words[] = { "ee" };
+            const char* ans[] = { "" };
+            test_gen_chain_char(words, 1, ans, 0, 0, 0, 0, true);
+        }
+
+        TEST_METHOD(TestCoreGenChainCharWithR4) {
+            const char* words[] = { "ee", "eee", "ffffff"};
+            const char* ans[] = { "ee", "eee"};
+            test_gen_chain_char(words, 2, ans, 2, 0, 0, 0, true);
         }
 
         // '-j'
