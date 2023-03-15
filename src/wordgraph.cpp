@@ -175,3 +175,41 @@ bool cmp_edge(const Edge& e1, const Edge& e2)
 {
     return e1.length > e2.length;
 }
+
+int WordGraph::get_chains_num()
+{
+    std::vector<long long> cnt(26);
+    std::vector<Edge const*> record_self_loop(26, nullptr);
+    int single_edge_num = 0;
+    for (auto it = get_topo_list().rbegin(); it != get_topo_list().rend(); ++it)
+    {
+        int now = *it;
+        for (const Edge& e : get_edges(now))
+        {
+            single_edge_num++;
+            if (e.from == e.to)
+            {
+                record_self_loop[e.from] = &e;
+            }
+            else
+            {
+                cnt[e.from] += 1 + cnt[e.to];
+            }
+        }
+        if (record_self_loop[now] != nullptr)
+        {
+            cnt[now] += cnt[now] + 1;
+        }
+    }
+    long long sum = 0;
+    for (int i = 0; i < 26; i++)
+    {
+        sum += cnt[i];
+    }
+    sum -= single_edge_num;
+    if (sum > 2147483647L)
+    {
+        return 2147483647;
+    }
+    return int(sum);
+}

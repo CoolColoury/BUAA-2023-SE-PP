@@ -9,7 +9,7 @@ void GenChainsAllStrategy::dfs_circle(int now, std::vector<bool>& vis, std::vect
         {
             words.push_back(e.word);
             add_chain(ans, words);
-            check_too_much_result(ans.size()); // 20000+“Ï≥£
+            // check_too_much_result(ans.size()); // 20000+“Ï≥£
             vis[e.id] = true;
             dfs_circle(e.to, vis, words, word_graph, ans);
             vis[e.id] = false;
@@ -296,7 +296,7 @@ void GenChainMaxOnMDGStrategy::dfs_circle(int now, std::vector<bool>& vis, std::
             words.push_back(e.word);
             if ((config.tail == 0) || (config.tail == (e.to + 'a')))
             {
-                if (ans_len < words_len + e.length)
+                if (words.size() > 1 && ans_len < words_len + e.length)
                 {
                     ans = words;
                     ans_len = words_len + e.length;

@@ -81,10 +81,10 @@ void check_ring_exception()
     throw new ring_check_exception();
 }
 
-void check_too_much_result(size_t len)
+void check_too_much_result(int len)
 {
     if (len >= 20000)
     {
-        throw new too_much_result();
+        throw new too_much_result(len);
     }
 }

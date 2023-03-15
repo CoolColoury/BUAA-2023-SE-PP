@@ -47,7 +47,11 @@ class ring_check_exception : public std::exception
 
 class too_much_result : public std::exception
 {
+    int m_num = 0;
+public:
+    too_much_result(int num) { m_num = num;  }
     const char* what() const { return "Too Much Result:"; }
+    int get_num() const { return m_num; }
 };
 
 void check_conflicted_argument(char origin);
@@ -59,7 +63,7 @@ void check_is_single_alpha(const char* arg);
 void check_head_or_tail_args(char& origin, const char* arg);
 void check_unexcepted_argument();
 
-void check_too_much_result(size_t len);
+void check_too_much_result(int len);
 void check_ring_exception();
 
 #endif // !_ERROR

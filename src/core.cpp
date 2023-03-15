@@ -19,7 +19,7 @@ int gen_chains_all(const char* words[], int len, char* result[])
             strcpy_s(result[i], length, vector_result[i].c_str());
         }
     }
-    return int(vector_result.size());
+    return g.get_chains_num() + 1;
 }
 
 int gen_chain_word(const char* words[], int len, char* result[], char head, char tail, char n_head, bool enable_loop)

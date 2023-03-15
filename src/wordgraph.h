@@ -53,6 +53,7 @@ public:
     void simplify_dag(char type);
 
     void make_graph2(char type);
+    int get_chains_num();
 };
 
 
