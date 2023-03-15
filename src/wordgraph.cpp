@@ -180,13 +180,11 @@ int WordGraph::get_chains_num()
 {
     std::vector<long long> cnt(26);
     std::vector<Edge const*> record_self_loop(26, nullptr);
-    int single_edge_num = 0;
     for (auto it = get_topo_list().rbegin(); it != get_topo_list().rend(); ++it)
     {
         int now = *it;
         for (const Edge& e : get_edges(now))
         {
-            single_edge_num++;
             if (e.from == e.to)
             {
                 record_self_loop[e.from] = &e;
@@ -206,7 +204,7 @@ int WordGraph::get_chains_num()
     {
         sum += cnt[i];
     }
-    sum -= single_edge_num;
+    sum -= edge_num;
     if (sum > 2147483647L)
     {
         return 2147483647;
