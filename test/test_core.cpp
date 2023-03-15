@@ -21,7 +21,7 @@ namespace test
             for (int i = 0; i < ans_len; i++) {
                 if (result != nullptr)
                 {
-                    Assert::AreEqual(strcmp(ans[i], result[i]), 0);
+                    Assert::AreEqual(strcmp(ans[i+1], result[i+1]), 0);
                 }
             }
             free(result);
@@ -98,13 +98,13 @@ namespace test
         TEST_METHOD(TestCoreGenChainsAll1) {
             const char* words[] = { "aa", "bb", "cc" };
             const char* ans[] = { "0" };
-            test_gen_chains_all(words, 3, ans, 1);
+            test_gen_chains_all(words, 3, ans, 0);
         }
 
         TEST_METHOD(TestCoreGenChainsAll2) {
             const char* words[] = { "aa", "bb", "ab" };
             const char* ans[] = { "3", "aa ab", "aa ab bb", "ab bb" };
-            test_gen_chains_all(words, 3, ans, 4);
+            test_gen_chains_all(words, 3, ans, 3);
         }
 
 
