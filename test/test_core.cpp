@@ -168,6 +168,12 @@ namespace test
             test_gen_chain_char(words, 11, ans, 2, 0, 0, 0, false);
         }
 
+        TEST_METHOD(TestCoreGenChainChar2) {
+            const char* words[] = { "aaa", "ab", "bbb", "pseudopseudohypoparathyroidism" };
+            const char* ans[] = { "aaa", "ab", "bbb" };
+            test_gen_chain_char(words, 4, ans, 3, 0, 0, 0, false);
+        }
+
         // '-h'
         TEST_METHOD(TestCoreGenChainCharWithH) {
             const char* words[] = { "algebra", "apple", "zoo", "elephant", "under", "fox", "dog", "moon", "leaf", "trick", "pseudopseudohypoparathyroidism" };
