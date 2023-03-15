@@ -239,10 +239,6 @@ void GenChainMaxOnDFAStrategy::solve(WordGraph& word_graph, Config& config, std:
         }
         for (const Edge& e : word_graph.get_edges(now))
         {
-            if (e.from == e.to)
-            {
-                record_self_loop[e.from] = &e;
-            }
             if (config.tail != 0 && !((e.to + 'a' == config.tail) || dp[e.to] != 0))
             {
                 continue;
@@ -250,7 +246,14 @@ void GenChainMaxOnDFAStrategy::solve(WordGraph& word_graph, Config& config, std:
             else if (dp[e.from] < dp[e.to] + e.length)
             {
                 dp[e.from] = dp[e.to] + e.length;
-                record[e.from] = &e;
+                if (e.from != e.to)
+                {
+                    record[e.from] = &e;
+                }
+                else
+                {
+                    record_self_loop[e.from] = &e;
+                }
             }
         }
         if (record_self_loop[now] != nullptr && (config.tail == 0 || ((now + 'a' == config.tail) || dp[now] != 0)))
