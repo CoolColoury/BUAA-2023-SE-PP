@@ -1,0 +1,93 @@
+<?xml version="1.0" ?>
+<root>
+	<config id="1">
+		<seed>597873</seed>
+		<word-num>10000</word-num>
+		<max-word-length>100</max-word-length>
+		<special>nr</special>
+	</config>
+	<config id="2">
+		<seed>530648</seed>
+		<word-num>10000</word-num>
+		<max-word-length>100</max-word-length>
+		<special>nr</special>
+	</config>
+	<config id="3">
+		<seed>612069</seed>
+		<word-num>10000</word-num>
+		<max-word-length>100</max-word-length>
+		<special>nr</special>
+	</config>
+	<config id="4">
+		<seed>46322</seed>
+		<word-num>10000</word-num>
+		<max-word-length>100</max-word-length>
+		<special>nr</special>
+	</config>
+	<config id="5">
+		<seed>591686</seed>
+		<word-num>10000</word-num>
+		<max-word-length>100</max-word-length>
+		<special>nr</special>
+	</config>
+	<config id="6">
+		<seed>82374</seed>
+		<word-num>10</word-num>
+		<max-word-length>100</max-word-length>
+		<special>r</special>
+	</config>
+	<config id="7">
+		<seed>609195</seed>
+		<word-num>20</word-num>
+		<max-word-length>100</max-word-length>
+		<special>r</special>
+	</config>
+	<config id="8">
+		<seed>305511</seed>
+		<word-num>30</word-num>
+		<max-word-length>100</max-word-length>
+		<special>r</special>
+	</config>
+	<config id="9">
+		<seed>764925</seed>
+		<word-num>40</word-num>
+		<max-word-length>100</max-word-length>
+		<special>r</special>
+	</config>
+	<config id="10">
+		<seed>97651</seed>
+		<word-num>50</word-num>
+		<max-word-length>100</max-word-length>
+		<special>r</special>
+	</config>
+	<config id="11">
+		<seed>976511</seed>
+		<word-num>60</word-num>
+		<max-word-length>100</max-word-length>
+		<special>r</special>
+	</config>
+	<config id="12">
+		<seed>63571</seed>
+		<word-num>70</word-num>
+		<max-word-length>100</max-word-length>
+		<special>r</special>
+	</config>
+	<config id="13">
+		<seed>416512</seed>
+		<word-num>80</word-num>
+		<max-word-length>100</max-word-length>
+		<special>r</special>
+	</config>
+	<config id="14">
+		<seed>9761251</seed>
+		<word-num>90</word-num>
+		<max-word-length>100</max-word-length>
+		<special>r</special>
+	</config>
+	<config id="15">
+		<seed>97314651</seed>
+		<word-num>100</word-num>
+		<max-word-length>100</max-word-length>
+		<special>r</special>
+	</config>
+</root>
