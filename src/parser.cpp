@@ -73,7 +73,7 @@ void Parser::check_args_error(int argc, char* argv[])
             check_bound(arg_i, argc);
             check_conflicted_argument(config.type);
             check_filename(argv[arg_i]);
-            config.type = argv[arg_i][1];
+            config.type = argv[arg_i - 1][1];
         }
         else if (strcmp(argv[arg_i], "-h") == 0)
         {
@@ -101,9 +101,8 @@ void Parser::check_args_error(int argc, char* argv[])
         }
         else if (strcmp(argv[arg_i], "-r") == 0)
         {
-            arg_i++;
-            check_bound(arg_i, argc);
             check_conflicted_argument(config.enable_loop);
+            config.enable_loop = true;
         }
         else
         {

@@ -168,6 +168,49 @@ namespace test
             test_gen_chain_char(words, 11, ans, 2, 0, 0, 0, false);
         }
 
+        TEST_METHOD(TestCoreGenChainChar2) {
+            const char* words[] = { "aaa", "ab", "bbb", "pseudopseudohypoparathyroidism" };
+            const char* ans[] = { "aaa", "ab", "bbb" };
+            test_gen_chain_char(words, 4, ans, 3, 0, 0, 0, false);
+        }
+
+
+        TEST_METHOD(TestCoreGenChainChar3) {
+            const char* words[] = { "ea", "ab", "bbb", "acccccccccccc" };
+            const char* ans[] = { "ea", "acccccccccccc" };
+            test_gen_chain_char(words, 4, ans, 2, 0, 0, 0, false);
+        }
+
+        TEST_METHOD(TestCoreGenChainChar4) {
+            const char* words[] = { "Aaaaaaa", "bbbb", "cccc", "acccccc", "abbbbbbbb"};
+            const char* ans[] = { "Aaaaaaa", "abbbbbbbb", "bbbb" };
+            test_gen_chain_char(words, 5, ans, 3, 0, 0, 0, false);
+        }
+
+        TEST_METHOD(TestCoreGenChainChar5) {
+            const char* words[] = { "Aaaaaaa", "bbbbbbbbbbbbbbbbbbbbbbb", "cccc", "acccccc", "abbbbbbbb" };
+            const char* ans[] = { "Aaaaaaa", "abbbbbbbb", "bbbbbbbbbbbbbbbbbbbbbbb" };
+            test_gen_chain_char(words, 5, ans, 3, 0, 0, 0, false);
+        }
+
+        TEST_METHOD(TestCoreGenChainChar6) {
+            const char* words[] = { "Aaaaaaa", "bbbbbbbbbbbbbbbbbbbbbbb", "cccc", "acccccc", "abbbbbbbb" };
+            const char* ans[] = { "Aaaaaaa", "acccccc", "cccc" };
+            test_gen_chain_char(words, 5, ans, 3, 0, 0, 'b', false);
+        }
+
+        TEST_METHOD(TestCoreGenChainChar7) {
+            const char* words[] = { "Aaaaaaa", "bbbbbbbbbbbbbbbbbbbbbbb", "cccc", "acccccc", "abbbbbbbb" };
+            const char* ans[] = { "" };
+            test_gen_chain_char(words, 5, ans, 0, 'b', 0, 0, false);
+        }
+
+        TEST_METHOD(TestCoreGenChainChar8) {
+            const char* words[] = { "Aaaaaaa", "bbbbbbbbbbbbbbbbbbbbbbb", "cccc", "acccccc", "abbbbbbbb", "bc" };
+            const char* ans[] = { "bbbbbbbbbbbbbbbbbbbbbbb", "bc", "cccc" };
+            test_gen_chain_char(words, 6, ans, 3, 'b', 0, 0, false);
+        }
+
         // '-h'
         TEST_METHOD(TestCoreGenChainCharWithH) {
             const char* words[] = { "algebra", "apple", "zoo", "elephant", "under", "fox", "dog", "moon", "leaf", "trick", "pseudopseudohypoparathyroidism" };

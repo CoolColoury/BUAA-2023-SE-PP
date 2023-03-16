@@ -118,9 +118,12 @@ Solver::~Solver()
 
 void GenChainMaxOnDFAStrategy::solve(WordGraph& word_graph, Config& config, std::vector<std::string>& ans)
 {
-    std::vector<int> dp(26, 0);
+    std::vector<int> dp_length(26, 0);
+    std::vector<int> max_end(26, 0);
+    std::vector<int> choice(26, 0);
     std::vector<Edge const*> record(26, nullptr);
     std::vector<Edge const*> record_self_loop(26, nullptr);
+    std::vector<Edge const*> record_end(26, nullptr);
     for (auto it = word_graph.get_topo_list().rbegin(); it != word_graph.get_topo_list().rend(); ++it)
     {
         int now = *it;
@@ -133,47 +136,91 @@ void GenChainMaxOnDFAStrategy::solve(WordGraph& word_graph, Config& config, std:
             if (e.from == e.to)
             {
                 record_self_loop[e.from] = &e;
-            }
-            if (config.tail != 0 && !((e.to + 'a' == config.tail) || dp[e.to] != 0))
-            {
                 continue;
             }
-            else if (dp[e.from] < dp[e.to] + e.length)
+            if (dp_length[e.to] > 0 && dp_length[e.from] < dp_length[e.to] + e.length)
             {
-                dp[e.from] = dp[e.to] + e.length;
+                dp_length[e.from] = dp_length[e.to] + e.length;
                 record[e.from] = &e;
+                choice[e.from] = 0;
+            }
+            if (max_end[e.to] > 0 && dp_length[e.from] < max_end[e.to] + e.length)
+            {
+                dp_length[e.from] = max_end[e.to] + e.length;
+                record[e.from] = &e;
+                choice[e.from] = 1;
+            }
+            if (config.tail == 0 || e.to + 'a' == config.tail)
+            {
+                if (max_end[e.from] < e.length)
+                {
+                    max_end[e.from] = e.length;
+                    record_end[e.from] = &e;
+                }
             }
         }
-        if (record_self_loop[now] != nullptr && (config.tail == 0 || ((now + 'a' == config.tail) || dp[now] != 0)))
+        // 自环在此处更新dp
+        if (record_self_loop[now] != nullptr)
         {
-            dp[now] = dp[now] + record_self_loop[now]->length;
+            if (dp_length[now] > 0 && dp_length[now] < dp_length[now] + record_self_loop[now]->length)
+            {
+                dp_length[now] = dp_length[now] + record_self_loop[now]->length;
+            }
+            if (max_end[now] > 0 && dp_length[now] < max_end[now] + record_self_loop[now]->length)
+            {
+                dp_length[now] = max_end[now] + record_self_loop[now]->length;
+            }
+            if (config.tail == 0 || now + 'a' == config.tail)
+            {
+                if (max_end[now] == 0)
+                {
+                    max_end[now] = record_self_loop[now]->length;
+                }
+            }
         }
     }
     int begin = -1;
     int max_length = 0;
     for (int i = 0; i < 26; i++)
     {
-        if (max_length < dp[i])
+        if (max_length < dp_length[i])
         {
             begin = i;
-            max_length = dp[i];
+            max_length = dp_length[i];
         }
     }
     if (config.head != 0)
     {
         begin = config.head - 'a';
     }
-    if (begin != -1)
+    if (begin != -1 && dp_length[begin] != 0)
     {
+        int now = begin;
         Edge const* e = record[begin];
+
         while (e != nullptr)
         {
-            if (record_self_loop[e->from] != nullptr)
+            if (record_self_loop[now] != nullptr)
             {
-                ans.push_back(record_self_loop[e->from]->word);
+                ans.push_back(record_self_loop[now]->word);
             }
             ans.push_back(e->word);
+            
+            if (choice[now] == 1)
+            {
+                now = e->to;
+                break;
+            }
+            now = e->to;
             e = record[e->to];
+        }
+        if (record_self_loop[now] != nullptr)
+        {
+            ans.push_back(record_self_loop[now]->word);
+        }
+        if (record_end[now] != nullptr)
+        {
+            ans.push_back(record_end[now]->word);
         }
     }
 }
