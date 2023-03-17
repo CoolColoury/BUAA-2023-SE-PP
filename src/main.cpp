@@ -4,6 +4,7 @@
 #include "parser.h"
 #include "wordgraph.h"
 #include "solver.h"
+#include "output.h"
 
 int main(int argc, char* argv[])
 {
@@ -11,7 +12,9 @@ int main(int argc, char* argv[])
     parser.parse(argc - 1, argv + 1);
     WordGraph graph(parser.get_words(), parser.get_config());
     Solver solver(graph, parser.get_config());
-    solver.solve(std::cout);
+    std::vector<std::string> ans;
+    solver.solve(ans);
+    write_to_solution_txt(ans);
 
     return 0;
 }
