@@ -1,11 +1,6 @@
 #include "output.h"
 
-inline void stream_write_line_no_flush(std::ostream& f, std::string const& line)
-{
-    f << line << "\n";
-}
-
-inline void write_to_solution_txt(std::vector<std::string> ans)
+void write_to_solution_txt(std::vector<std::string> ans)
 {
     std::ofstream fout;
     fout.open("solution.txt");
@@ -15,7 +10,7 @@ inline void write_to_solution_txt(std::vector<std::string> ans)
     }
     for (const std::string& line: ans)
     {
-        stream_write_line_no_flush(fout, line);
+        fout << line << "\n";
     }
     fout.flush();
     fout.close();

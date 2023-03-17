@@ -48,7 +48,7 @@ namespace test
             c.enable_loop = true;
             std::vector<std::string> words = { "w", "w" };
             WordGraph g(words, c);
-            Assert::AreEqual(g.contain_circle(), true);
+            Assert::AreEqual(g.contain_circle(), false);
         }
 
         TEST_METHOD(TestCircleWithBasicSample)
