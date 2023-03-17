@@ -6,7 +6,7 @@ void write_to_solution_txt(std::vector<std::string> ans)
     fout.open("solution.txt");
     if (!fout.is_open())
     {
-        throw new missing_file();
+        throw missing_file();
     }
     for (const std::string& line: ans)
     {

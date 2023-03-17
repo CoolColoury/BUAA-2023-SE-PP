@@ -6,7 +6,7 @@ void check_conflicted_argument(char origin)
 {
     if (origin != 0)
     {
-        throw new conflicted_argument();
+        throw conflicted_argument();
     }
 }
 
@@ -14,7 +14,7 @@ void check_conflicted_arguemnt(bool origin)
 {
     if (origin)
     {
-        throw new conflicted_argument();
+        throw conflicted_argument();
     }
 }
 
@@ -22,13 +22,13 @@ void check_config_valid(const Config& config)
 {
     if (config.type == 0)
     {
-        throw new missing_argument();
+        throw missing_argument();
     }
     if (config.type == 'n')
     {
         if (config.head || config.tail || config.n_head || config.enable_loop)
         {
-            throw new conflicted_argument();
+            throw conflicted_argument();
         }
     }
 }
@@ -45,14 +45,14 @@ void check_filename(char* filename)
             return;
         }
     }
-    throw new invalid_file();
+    throw invalid_file();
 }
 
 void check_bound(int index, int max)
 {
     if (index >= max)
     {
-        throw new missing_argument();
+        throw missing_argument();
     }
 }
 
@@ -60,7 +60,7 @@ void check_is_single_alpha(const char* arg)
 {
     if (strlen(arg) != 1 || !isalpha(arg[0]))
     {
-        throw new invalid_argument();
+        throw invalid_argument();
     }
 }
 
@@ -73,18 +73,18 @@ void check_head_or_tail_args(char& origin, const char* arg)
 
 void check_unexcepted_argument()
 {
-    throw new unexpected_argument();
+    throw unexpected_argument();
 }
 
 void check_ring_exception()
 {
-    throw new ring_check_exception();
+    throw ring_check_exception();
 }
 
 void check_too_much_result(int len)
 {
     if (len >= 20000)
     {
-        throw new too_much_result(len);
+        throw too_much_result(len);
     }
 }

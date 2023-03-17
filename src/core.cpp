@@ -5,11 +5,12 @@ int gen_chains_all(const char* words[], int len, char* result[])
     std::vector<std::string> vector_words(words, words + len);
     Config config;
     config.type = 'n';
-    WordGraph g(vector_words, config);
 
+    WordGraph g(vector_words, config);
     Solver solver(g, config);
     std::vector<std::string> vector_result;
     solver.solve(vector_result);
+
     for (int i = 0; i < vector_result.size(); i++)
     {
         size_t length = vector_result[i].size() + 1;
@@ -64,4 +65,16 @@ int gen_chain_char(const char* words[], int len, char* result[], char head, char
         }
     }
     return int(vector_result.size());
+}
+
+extern char* ERROR_MESSAGE = nullptr;
+
+char* get_error_message()
+{
+    return ERROR_MESSAGE;
+}
+
+void set_error_message(char* error_message)
+{
+    ERROR_MESSAGE = error_message;
 }

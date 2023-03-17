@@ -8,13 +8,20 @@
 
 int main(int argc, char* argv[])
 {
-    Parser parser;
-    parser.parse(argc - 1, argv + 1);
-    WordGraph graph(parser.get_words(), parser.get_config());
-    Solver solver(graph, parser.get_config());
-    std::vector<std::string> ans;
-    solver.solve(ans);
-    write_to_solution_txt(ans);
+    try
+    {
+        Parser parser;
+        parser.parse(argc - 1, argv + 1);
+        WordGraph graph(parser.get_words(), parser.get_config());
+        Solver solver(graph, parser.get_config());
+        std::vector<std::string> ans;
+        solver.solve(ans);
+        write_to_solution_txt(ans);
+    }
+    catch (const std::exception& e)
+    {
+        std::cerr << e.what() << std::endl;
+    }
 
     return 0;
 }

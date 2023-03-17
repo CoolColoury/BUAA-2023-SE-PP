@@ -48,7 +48,7 @@ namespace test
             int result = 0;
             for (int i = 0; i < len; i++)
             {
-                result += strlen(words[i]);
+                result += int(strlen(words[i]));
             }
             return result;
         }
@@ -58,7 +58,7 @@ namespace test
             int result = 0;
             for (int i = 0; i < len; i++) 
             {
-                result += strlen(words[i]);
+                result += int(strlen(words[i]));
             }
             return result;
         }
