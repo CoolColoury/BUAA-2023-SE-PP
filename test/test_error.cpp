@@ -102,8 +102,8 @@ namespace test
             }
             catch (const std::exception& e)
             {
-                const char* s = typeid(e).name();
-                Assert::AreEqual(strcmp(typeid(e).name(), "class invalid_argument"), 0);
+                char* error = get_error_message();
+                Assert::AreEqual(strcmp(get_error_message(), "Invalid Argument:"), 0);
             }
         }   
     };
