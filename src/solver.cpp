@@ -54,14 +54,6 @@ void GenChainsAllStrategy::add_chain(std::vector<std::string>& ans, std::vector<
     ans.push_back(res);
 }
 
-void Solver::print_vector(std::ostream& output, std::vector<std::string>& ans)
-{
-    for (auto it = ans.begin(); it != ans.end(); ++it)
-    {
-        output << *it << '\n';
-    }
-}
-
 Solver::Solver(WordGraph& word_graph, Config& config) : m_word_graph(word_graph), m_config(config)
 {
     if (config.type == 'n')
@@ -94,13 +86,6 @@ Solver::Solver(WordGraph& word_graph, Config& config) : m_word_graph(word_graph)
     {
         this->m_strategy = nullptr;
     }
-}
-
-void Solver::solve(std::ostream& output)
-{
-    std::vector<std::string> ans;
-    m_strategy->solve(m_word_graph, m_config, ans);
-    print_vector(output, ans);
 }
 
 void Solver::solve(std::vector<std::string>& output)

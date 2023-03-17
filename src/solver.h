@@ -45,11 +45,9 @@ private:
     Strategy* m_strategy;
     WordGraph m_word_graph;
     Config m_config;
-    
-    void print_vector(std::ostream& output, std::vector<std::string>& edge);
+
 public:
     Solver(WordGraph& word_graph, Config& config);
-    void solve(std::ostream& output);
     void solve(std::vector<std::string>& output);
 
     ~Solver();
