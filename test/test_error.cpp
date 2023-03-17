@@ -93,7 +93,7 @@ namespace test
     public:
 
         
-        TEST_METHOD(TestCoreGenChainCharWithJ) {
+        TEST_METHOD(TestCoreGenChainLoopError) {
             const char* words[] = { "element", "te", "eee", "ttt", "talk" };
             const char* ans[] = { 0 };
             try
