@@ -8,15 +8,15 @@
 #include "error.h"
 
 #ifndef _WORDGRAPH
-#define WORDGRAPH
+#define _WORDGRAPH
 
 struct Edge
 {
     int id;
-    std::string word;
     int length;
     int from;
     int to;
+    std::string word;
 
     Edge(int id, std::string word, char type) :id(id), word(word)
     {
@@ -31,10 +31,10 @@ bool cmp_edge(const Edge& e1, const Edge& e2);
 class WordGraph
 {
 private:
+    static const int NUM_NODE = 26;
     int edge_num = 0;
     std::map<int, std::vector<Edge>> m_word_graph;
     std::map<int, std::map<int, std::vector<Edge>>> m_word_graph2;
-    static const int NUM_NODE = 26;
     std::vector<int> topo_list;
 
 
@@ -52,7 +52,7 @@ public:
     // ÎÞ»·Í¼¼ò»¯
     void simplify_dag(char type);
 
-    void make_graph2(char type);
+    void make_graph2();
     int get_chains_num();
 };
 

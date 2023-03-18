@@ -1,17 +1,18 @@
 #pragma once
-#pragma once
+
 #include "wordgraph.h"
 #include "config.h"
 #include <iostream>
+
 #ifndef _SOLVER
-
-#define SOLVER
-
+#define _SOLVER
 
 class Strategy
 {
 public:
     virtual void solve(WordGraph& word_graph, Config& config, std::vector<std::string>& ans) = 0;
+
+    virtual ~Strategy() = 0;
 };
 
 class GenChainsAllStrategy : public Strategy

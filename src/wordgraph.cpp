@@ -3,9 +3,9 @@
 
 inline void to_lower_string(std::string& word)
 {
-    for (auto& c : word)
+    for (char& c : word)
     {
-        c = tolower(c);
+        c = (char)tolower(c);
     }
 }
 
@@ -124,7 +124,7 @@ void WordGraph::parseConfig(Config& config)
     }
     else 
     {
-        make_graph2(config.type);
+        make_graph2();
     }
 }
 
@@ -166,7 +166,7 @@ void WordGraph::simplify_dag(char type)
     }
 }
 
-void WordGraph::make_graph2(char type)
+void WordGraph::make_graph2()
 {
     for (int from = 0; from < NUM_NODE; from++)
     {

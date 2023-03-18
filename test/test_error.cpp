@@ -39,7 +39,7 @@ namespace test
             {
                 test_gen_chain_char(words, 5, ans, 0, 0, 0, 'e', false);
             }
-            catch (const std::exception& e)
+            catch (const std::exception&)
             {
                 char* error = get_error_message();
                 Assert::AreEqual(strcmp(get_error_message(), "Ring Check Exception:"), 0);
@@ -54,7 +54,7 @@ namespace test
             {
                 test_gen_chain_word(words, 5, ans, 0, 0, 0, 'e', false);
             }
-            catch (const std::exception& e)
+            catch (const std::exception&)
             {
                 char* error = get_error_message();
                 Assert::AreEqual(strcmp(get_error_message(), "Ring Check Exception:"), 0);
@@ -69,7 +69,7 @@ namespace test
             {
                 test_gen_chains_all(words, 5, ans, 0);
             }
-            catch (const std::exception& e)
+            catch (const std::exception&)
             {
                 char* error = get_error_message();
                 Assert::AreEqual(strcmp(get_error_message(), "Ring Check Exception:"), 0);

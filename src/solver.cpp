@@ -10,7 +10,6 @@ void GenChainsAllStrategy::dfs_circle(int now, std::vector<bool>& vis, std::vect
         {
             words.push_back(e.word);
             add_chain(ans, words);
-            // check_too_much_result(ans.size()); // 20000+“Ï≥£
             vis[e.id] = true;
             dfs_circle(e.to, vis, words, word_graph, ans);
             vis[e.id] = false;
@@ -21,13 +20,13 @@ void GenChainsAllStrategy::dfs_circle(int now, std::vector<bool>& vis, std::vect
 
 void GenChainsAllStrategy::solve(WordGraph& word_graph, Config& config, std::vector<std::string>& ans)
 {
+    (void)config;
     if (word_graph.get_chains_num() > 20000)
     {
         throw too_much_result(word_graph.get_chains_num());
     }
     int num_node = 26;
     std::vector<bool> vis(word_graph.get_edge_num(), false);
-    ans.push_back(std::to_string(0));
     for (int node = 0; node < num_node; node++)
     {
         for (Edge e : word_graph.get_edges(node))
@@ -40,7 +39,6 @@ void GenChainsAllStrategy::solve(WordGraph& word_graph, Config& config, std::vec
             edges.pop_back();
         }
     }
-    ans[0] = std::to_string(ans.size() - 1);
 }
 
 void GenChainsAllStrategy::add_chain(std::vector<std::string>& ans, std::vector<std::string>& words)
@@ -402,4 +400,8 @@ void GenChainMaxOnMDGThreadStrategy::solve(WordGraph& word_graph, Config& config
     {
         ans = c_ans[id];
     }
+}
+
+Strategy::~Strategy()
+{
 }
