@@ -167,6 +167,7 @@
     <ClCompile Include="test_error.cpp" />
     <ClCompile Include="test_graph.cpp" />
     <ClCompile Include="test_parser.cpp" />
+    <ClCompile Include="test_parser_error.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />

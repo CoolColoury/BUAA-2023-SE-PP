@@ -83,7 +83,7 @@ namespace test
             }
             catch (const std::exception& e)
             {
-                Assert::AreEqual(strcmp(e.what(), "Invalid Argument:"), 0);
+                Assert::AreEqual(strcmp(e.what(), "Invalid Argument: please give a single alpha instead of aa"), 0);
             }
         }
 
