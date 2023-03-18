@@ -263,5 +263,11 @@ namespace test
             const char* ans[] = { "teach", "heaven" };
             test_gen_chain_char(words, 5, ans, 2, 0, 0, 'e', false);
         }
+
+        TEST_METHOD(TestCoreGenChainCharLoop) {
+            const char* words[] = { "AA", "ABA", "ABBBBBBA", "ABBBBBBBBBBA", "CA", "AC", "AAAAAAAAAAAAAC", "BC", "CB"};
+            const char* ans[] = { "aa", "aba", "abbbbbba", "abbbbbbbbbba", "ac", "ca", "aaaaaaaaaaaaac", "cb", "bc" };
+            test_gen_chain_char(words, 9, ans, 9, 0, 0, 0, true);
+        }
     };
 }
