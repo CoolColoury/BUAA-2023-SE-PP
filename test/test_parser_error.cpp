@@ -141,9 +141,25 @@ namespace test
             {
                 parser.parse(argc, argv);
             }
+            catch (const std::exception& e) 
+            {
+                Assert::IsTrue(false);
+            }
+            Assert::IsTrue(true);
+        }
+
+        TEST_METHOD(TestMissingFile)
+        {
+            Parser parser;
+            int argc = 2;
+            char* argv[] = { "-w", ".txt"};
+            try
+            {
+                parser.parse(argc, argv);
+            }
             catch (const std::exception& e)
             {
-                Assert::AreEqual(strcmp(e.what(), "Conflicted Argument: -w"), 0);
+                Assert::AreEqual(strcmp(e.what(), "Missing File: input file cannot open"), 0);
             }
         }
     };

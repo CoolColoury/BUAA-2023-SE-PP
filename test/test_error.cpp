@@ -76,5 +76,19 @@ namespace test
             }
         }
 
+        TEST_METHOD(TestTooMuchResult)
+        {
+            const char* words[] = { "ab", "abb", "abbb", "bc", "bcc", "bccc", "cd", "cdd", "cddd", "de", "dee", "deee", "ef", "eff", "efff", "fg", "fgg", "fggg", "gh", "ghh", "ghhh", "hi", "hii", "hiii", "ij", "ijj", "ijjj", "jk", "jkk", "jkkk" };
+            const char* ans[] = { 0 };
+            try
+            {
+                test_gen_chains_all(words, 30, ans, 0);
+            }
+            catch (const std::exception&)
+            {
+                char* error = get_error_message();
+                Assert::AreEqual(strcmp(get_error_message(), "Too Much Result: 132813"), 0);
+            }
+        }
     };
 }
