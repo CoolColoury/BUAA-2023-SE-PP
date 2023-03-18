@@ -6,6 +6,6 @@
 #ifndef _OUTPUT
 #define _OUTPUT
 
-void write_to_solution_txt(std::vector<std::string> ans);
+void write_to_solution_txt(std::vector<std::string> ans, char type);
 
 #endif // !_OUTPUT

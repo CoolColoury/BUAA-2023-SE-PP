@@ -42,7 +42,7 @@ namespace test
             catch (const std::exception&)
             {
                 char* error = get_error_message();
-                Assert::AreEqual(strcmp(get_error_message(), "Ring Check Exception:"), 0);
+                Assert::AreEqual(strcmp(get_error_message(), "Ring Check Exception: there is a loop in words"), 0);
             }
         }
 
@@ -57,7 +57,7 @@ namespace test
             catch (const std::exception&)
             {
                 char* error = get_error_message();
-                Assert::AreEqual(strcmp(get_error_message(), "Ring Check Exception:"), 0);
+                Assert::AreEqual(strcmp(get_error_message(), "Ring Check Exception: there is a loop in words"), 0);
             }
         }
 
@@ -72,7 +72,7 @@ namespace test
             catch (const std::exception&)
             {
                 char* error = get_error_message();
-                Assert::AreEqual(strcmp(get_error_message(), "Ring Check Exception:"), 0);
+                Assert::AreEqual(strcmp(get_error_message(), "Ring Check Exception: there is a loop in words"), 0);
             }
         }
 

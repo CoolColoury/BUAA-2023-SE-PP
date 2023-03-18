@@ -6,11 +6,9 @@ int gen_chains_all(const char* words[], int len, char* result[])
     Config config;
     config.type = 'n';
     std::vector<std::string> vector_result;
-    int total = 0;
     try
     {
         WordGraph g(vector_words, config);
-        total = g.get_chains_num();
         Solver solver(g, config);
         solver.solve(vector_result);
     }
@@ -29,7 +27,7 @@ int gen_chains_all(const char* words[], int len, char* result[])
             strcpy_s(result[i], length, vector_result[i].c_str());
         }
     }
-    return total;
+    return int(vector_result.size());
 }
 
 int gen_chain_word(const char* words[], int len, char* result[], char head, char tail, char n_head, bool enable_loop)

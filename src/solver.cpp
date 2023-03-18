@@ -21,10 +21,7 @@ void GenChainsAllStrategy::dfs_circle(int now, std::vector<bool>& vis, std::vect
 void GenChainsAllStrategy::solve(WordGraph& word_graph, Config& config, std::vector<std::string>& ans)
 {
     (void)config;
-    if (word_graph.get_chains_num() > 20000)
-    {
-        throw too_much_result(word_graph.get_chains_num());
-    }
+    check_too_much_result(word_graph.get_chains_num());
     int num_node = 26;
     std::vector<bool> vis(word_graph.get_edge_num(), false);
     for (int node = 0; node < num_node; node++)

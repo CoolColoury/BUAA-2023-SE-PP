@@ -9,7 +9,7 @@ void Parser::parse(int argc, char* argv[])
     f.open(m_filename);
     if (!f)
     {
-        // TODO: Å×³öÒì³£
+        throw missing_file();
     }
     parse_words(f);
 }
@@ -70,7 +70,7 @@ void Parser::check_args_error(int argc, char* argv[])
             strcmp(argv[arg_i], "-c") == 0)
         {
             arg_i++;
-            check_bound(arg_i, argc);
+            check_bound(arg_i, argc, argv[arg_i - 1]);
             check_conflicted_argument(config.type);
             check_filename(argv[arg_i]);
             config.type = argv[arg_i - 1][1];
@@ -78,7 +78,7 @@ void Parser::check_args_error(int argc, char* argv[])
         else if (strcmp(argv[arg_i], "-h") == 0)
         {
             arg_i++;
-            check_bound(arg_i, argc);
+            check_bound(arg_i, argc, argv[arg_i - 1]);
             check_conflicted_argument(config.head);
             check_is_single_alpha(argv[arg_i]);
             config.head = argv[arg_i][0];
@@ -86,7 +86,7 @@ void Parser::check_args_error(int argc, char* argv[])
         else if (strcmp(argv[arg_i], "-t") == 0)
         {
             arg_i++;
-            check_bound(arg_i, argc);
+            check_bound(arg_i, argc, argv[arg_i - 1]);
             check_conflicted_argument(config.tail);
             check_is_single_alpha(argv[arg_i]);
             config.tail = argv[arg_i][0];
@@ -94,7 +94,7 @@ void Parser::check_args_error(int argc, char* argv[])
         else if (strcmp(argv[arg_i], "-j") == 0)
         {
             arg_i++;
-            check_bound(arg_i, argc);
+            check_bound(arg_i, argc, argv[arg_i - 1]);
             check_conflicted_argument(config.n_head);
             check_is_single_alpha(argv[arg_i]);
             config.n_head = argv[arg_i][0];
@@ -106,7 +106,7 @@ void Parser::check_args_error(int argc, char* argv[])
         }
         else
         {
-            check_unexcepted_argument();
+            check_unexcepted_argument(argv[arg_i]);
         }
     }
     check_config_valid(config);

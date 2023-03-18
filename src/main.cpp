@@ -16,7 +16,7 @@ int main(int argc, char* argv[])
         Solver solver(graph, parser.get_config());
         std::vector<std::string> ans;
         solver.solve(ans);
-        write_to_solution_txt(ans);
+        write_to_solution_txt(ans, parser.get_config().type);
     }
     catch (const std::exception& e)
     {

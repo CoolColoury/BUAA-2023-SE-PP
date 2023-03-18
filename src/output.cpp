@@ -1,12 +1,16 @@
 #include "output.h"
 
-void write_to_solution_txt(std::vector<std::string> ans)
+void write_to_solution_txt(std::vector<std::string> ans, char type)
 {
     std::ofstream fout;
     fout.open("solution.txt");
     if (!fout.is_open())
     {
-        throw missing_file();
+        throw can_not_output();
+    }
+    if (type == 'n')
+    {
+        fout << ans.size() << "\n";
     }
     for (const std::string& line: ans)
     {

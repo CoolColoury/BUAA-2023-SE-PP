@@ -193,7 +193,7 @@ bool cmp_edge(const Edge& e1, const Edge& e2)
     return e1.length > e2.length;
 }
 
-int WordGraph::get_chains_num()
+long long WordGraph::get_chains_num()
 {
     std::vector<long long> cnt(26);
     std::vector<Edge const*> record_self_loop(26, nullptr);
@@ -222,9 +222,5 @@ int WordGraph::get_chains_num()
         sum += cnt[i];
     }
     sum -= edge_num;
-    if (sum > 2147483647L)
-    {
-        return 2147483647;
-    }
-    return int(sum);
+    return sum;
 }

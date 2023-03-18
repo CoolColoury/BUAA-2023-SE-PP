@@ -23,7 +23,7 @@ namespace test
             }
             catch (const std::exception& e)
             {
-                Assert::AreEqual(strcmp(e.what(), "Missing Argument:"), 0);
+                Assert::AreEqual(strcmp(e.what(), "Missing Argument: no valid argument"), 0);
             }
         }
 
@@ -38,7 +38,7 @@ namespace test
             }
             catch (const std::exception& e)
             {
-                Assert::AreEqual(strcmp(e.what(), "Missing Argument:"), 0);
+                Assert::AreEqual(strcmp(e.what(), "Missing Argument: you need give an argument after -w"), 0);
             }
         }
 
@@ -53,7 +53,7 @@ namespace test
             }
             catch (const std::exception& e)
             {
-                Assert::AreEqual(strcmp(e.what(), "Conflicted Argument:"), 0);
+                Assert::AreEqual(strcmp(e.what(), "Conflicted Argument: -w"), 0);
             }
         }
 
@@ -68,7 +68,7 @@ namespace test
             }
             catch (const std::exception& e)
             {
-                Assert::AreEqual(strcmp(e.what(), "Unexpected Argument:"), 0);
+                Assert::AreEqual(strcmp(e.what(), "Unexpected Argument: -l"), 0);
             }
         }
 
@@ -98,7 +98,7 @@ namespace test
             }
             catch (const std::exception& e)
             {
-                Assert::AreEqual(strcmp(e.what(), "Invalid File:"), 0);
+                Assert::AreEqual(strcmp(e.what(), "Invalid File: you need end with .txt"), 0);
             }
         }
 
@@ -113,7 +113,7 @@ namespace test
             }
             catch (const std::exception& e)
             {
-                Assert::AreEqual(strcmp(e.what(), "Conflicted Argument:"), 0);
+                Assert::AreEqual(strcmp(e.what(), "Conflicted Argument: -r"), 0);
             }
         }
 
@@ -128,10 +128,8 @@ namespace test
             }
             catch (const std::exception& e)
             {
-                Assert::AreEqual(strcmp(e.what(), "Conflicted Argument:"), 0);
+                Assert::AreEqual(strcmp(e.what(), "Conflicted Argument: -n"), 0);
             }
         }
-        
-
     };
 }
