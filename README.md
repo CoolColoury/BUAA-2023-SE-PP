@@ -53,7 +53,7 @@
 
 主要是对题目样例以及一些小样例进行测试，同时尽可能提高代码覆盖率。
 
-#### 9.1 手工样例测试
+### 9.1 手工样例测试
 
 自己构造的简单样例，主要进行各个重要模块的覆盖率和正确性测试。构造了50个左右的单元测试用例。
 
@@ -61,35 +61,341 @@
 
 <img src="./img/4.png" alt="image-20230318212414379" style="zoom:50%;" />
 
+
+
 各个单元测试分别如下：
 
-*   `test_core`: 主要测试core模块的三个重要函数的功能。
+* `test_core`: 测试core模块的三个重要函数的功能。
 
+    这里以`gen_chain_word`测试为例。
+
+    首先定义一个`test_gen_chain_word`方法。为测试`gen_chain_word`的接口，并和手动构造的数据的答案进行比对判断。
+
+    ```cpp
+    void test_gen_chain_word(const char* words[], int len, const char* ans[], int ans_len, char head, char tail, char n_head, bool enable_loop) {
+        char** result = (char**)malloc(10000);
+        int out_len = gen_chain_word(words, len, result, head, tail, n_head, enable_loop);
+        Assert::IsTrue(check_valid(result, out_len, head, tail, n_head, enable_loop));
+        Assert::AreEqual(ans_len, out_len);
+        free(result);
+    }
     ```
+
+    通过手动构造可以得到如下的部分测试样例：
+
+    ```cpp
+    // '-w'
+    TEST_METHOD(TestCoreGenChainWord) {
+        const char* words[] = { "algebra", "apple", "zoo", "elephant", "under", "fox", "dog", "moon", "leaf", "trick", "pseudopseudohypoparathyroidism" };
+        const char* ans[] = { "algebra", "apple", "elephant", "trick" };
+        test_gen_chain_word(words, 11, ans, 4, 0, 0, 0, false);
+    }
     
+    // '-h'
+    TEST_METHOD(TestCoreGenChainWordWithH) {
+        const char* words[] = { "algebra", "apple", "zoo", "elephant", "under", "fox", "dog", "moon", "leaf", "trick", "pseudopseudohypoparathyroidism" };
+        const char* ans[] = { "elephant", "trick" };
+        test_gen_chain_word(words, 11, ans, 2, 'e', 0, 0, false);
+    }
+    
+    // ...
+    ```
+
+* `test_error`:运行时异常处理的单元测试。
+
+    测试样例部分如下：
+
+    ```cpp
+    // 有环
+    TEST_METHOD(TestCoreGenChainCharLoopError)
+    {
+        const char* words[] = { "element", "te", "eee", "ttt", "talk" };
+        const char* ans[] = { 0 };
+        try
+        {
+            test_gen_chain_char(words, 5, ans, 0, 0, 0, 'e', false);
+        }
+        catch (const std::exception&)
+        {
+            char* error = get_error_message();
+            Assert::AreEqual(strcmp(get_error_message(), "Ring Check Exception: there is a loop in words"), 0);
+        }
+    }
+    
+    // 无环
+    TEST_METHOD(TestCoreGenChainWordLoopError)
+    {
+        const char* words[] = { "element", "te", "eee", "ttt", "talk" };
+        const char* ans[] = { 0 };
+        try
+        {
+            test_gen_chain_word(words, 5, ans, 0, 0, 0, 'e', false);
+        }
+        catch (const std::exception&)
+        {
+            char* error = get_error_message();
+            Assert::AreEqual(strcmp(get_error_message(), "Ring Check Exception: there is a loop in words"), 0);
+        }
+    }
+    ```
+
+* `test_graph`:数据结构（图）的核心函数的单元测试模块。
+
+    测试样例部分如下：
+
+    ```cpp
+    // 含环测试
+    TEST_METHOD(TestCircleWithTwoWords)
+    {
+        std::vector<std::string> words = { "ab", "ba" };
+        Config c;
+        c.enable_loop = true;
+        c.type = 'n';
+        WordGraph g(words, c);
+        Assert::AreEqual(g.contain_circle(), true);
+    }
+    
+    // 自环测试
+    TEST_METHOD(TestCircleWithSameHeadTail1)
+    {
+        Config c;
+        c.type = 'n';
+        std::vector<std::string> words = { "aa" };
+        WordGraph g(words, c);
+        Assert::AreEqual(g.contain_circle(), false);
+    }
+    ```
+
+* `test_parser`:Parser模块的单元测试。
+
+    首先定义config检测函数:
+
+    ```cpp
+    void test_config(Config& config, char head, char tail, char n_head, char type, bool enable_loop)
+    {
+        Assert::AreEqual(config.head == head, true);
+        Assert::AreEqual(config.tail == tail, true);
+        Assert::AreEqual(config.n_head == n_head, true);
+        Assert::AreEqual(config.type == type, true);
+        Assert::AreEqual(config.enable_loop, enable_loop);
+    }
+    ```
+
+    测试样例部分如下：
+
+    ```cpp
+    // -n
+    TEST_METHOD(TestParseWith1)
+    {
+        Parser parser;
+        int argc = 2;
+        char* argv[] = { "-n", "stdin.txt" };
+        parser.parse(argc, argv);
+        test_config(parser.get_config(), 0, 0, 0, 'n', false);
+    }
+    
+    // -c -j
+    TEST_METHOD(TestParseWith2)
+    {
+        Parser parser;
+        int argc = 4;
+        char* argv[] = { "-c", "stdin.txt", "-j", "h"};
+        parser.parse(argc, argv);
+        test_config(parser.get_config(), 0, 0, 'h', 'c', false);
+    }
+    ```
+
+* `test_parser_error`:Parser异常单元测试
+
+    ```cpp
+     // 缺少参数异常
+     TEST_METHOD(TestMissingArgument)
+    {
+        Parser parser;
+        int argc = 0;
+        char* argv[] = { "" };
+        try
+        {
+            parser.parse(argc, argv);
+        }
+        catch (const std::exception& e)
+        {
+            Assert::AreEqual(strcmp(e.what(), "Missing Argument: no valid argument"), 0);
+        }
+    }
+    
+    // ...详见 Part 10
     ```
 
     
 
-*   `test_error`:
-
-*   `test_graph`:
-
-*   `test_parser`:
-
-*   `test_parser_error`:
-
-
-
-#### 9.2 对拍测试
+### 9.2 对拍测试
 
 // TODO \楠神加油!/
 
 ## 10 计算模块部分异常处理说明
 
+我们总共定义了两种异常大类，利用了`std`的`logic_error`和自己定义的继承于`std`的`exception`。大致分别区分解析处理异常和运行时异常。
+
+### 10.1 解析处理异常
+
+* `Conflicted Arguemnt`:参数冲突
+
+    ```cpp
+    // -r -r 冲突
+    TEST_METHOD(TestConflictedArgumentWithR)
+    {
+        Parser parser;
+        int argc = 2;
+        char* argv[] = { "-r", "-r" };
+        try
+        {
+            parser.parse(argc, argv);
+        }
+        catch (const std::exception& e)
+        {
+            Assert::AreEqual(strcmp(e.what(), "Conflicted Argument: -r"), 0);
+        }
+    }
+    
+    // -n -r 冲突
+    TEST_METHOD(TestConflictedArgumentWithNR)
+    {
+        Parser parser;
+        int argc = 3;
+        char* argv[] = { "-n", ".txt", "-r"};
+        try
+        {
+            parser.parse(argc, argv);
+        }
+        catch (const std::exception& e)
+        {
+            Assert::AreEqual(strcmp(e.what(), "Conflicted Argument: -n"), 0);
+        }
+    }
+    ```
+
+* `Missing Argument`:缺失参数
+
+    ```cpp
+    // 没有参数
+    TEST_METHOD(TestMissingArgument)
+    {
+        Parser parser;
+        int argc = 0;
+        char* argv[] = { "" };
+        try
+        {
+            parser.parse(argc, argv);
+        }
+        catch (const std::exception& e)
+        {
+            Assert::AreEqual(strcmp(e.what(), "Missing Argument: no valid argument"), 0);
+        }
+    }
+    ```
+
+* `Invalid Argument`:不合法参数
+
+    ```cpp
+    // -h 后的参数不合法
+    TEST_METHOD(TestInvalidArgument)
+    {
+        Parser parser;
+        int argc = 2;
+        char* argv[] = { "-h", "aa"};
+        try
+        {
+            parser.parse(argc, argv);
+        }
+        catch (const std::exception& e)
+        {
+            Assert::AreEqual(strcmp(e.what(), "Invalid Argument: please give a single alpha instead of aa"), 0);
+        }
+    }
+    ```
+
+* `Invalid File`:文件不合法
+
+    ```cpp
+    // .png文件不合法
+    TEST_METHOD(TestInvalidFile)
+    {
+        Parser parser;
+        int argc = 2;
+        char* argv[] = { "-w", "ss.png" };
+        try
+        {
+            parser.parse(argc, argv);
+        }
+        catch (const std::exception& e)
+        {
+            Assert::AreEqual(strcmp(e.what(), "Invalid File: you need end with .txt"), 0);
+        }
+    }
+    ```
+
+* `Unexpected Argument`:无法识别参数
+
+    ```cpp
+    // -l 是无法识别的参数
+    TEST_METHOD(TestUnexpectedArgument)
+    {
+        Parser parser;
+        int argc = 1;
+        char* argv[] = { "-l" };
+        try
+        {
+            parser.parse(argc, argv);
+        }
+        catch (const std::exception& e)
+        {
+            Assert::AreEqual(strcmp(e.what(), "Unexpected Argument: -l"), 0);
+        }
+    }
+    ```
+
+### 10.2 运行时异常
+
+* `Missing File`:缺少文件或读取不了文件异常
+
+    ```
+    ```
+
+    
+
+* `Ring Check Exception`:成环异常
+
+    ```cpp
+    // 成环且没有-r参数
+    TEST_METHOD(TestCoreGenChainCharLoopError)
+    {
+        const char* words[] = { "element", "te", "eee", "ttt", "talk" };
+        const char* ans[] = { 0 };
+        try
+        {
+            test_gen_chain_char(words, 5, ans, 0, 0, 0, 'e', false);
+        }
+        catch (const std::exception&)
+        {
+            char* error = get_error_message();
+            Assert::AreEqual(strcmp(get_error_message(), "Ring Check Exception: there is a loop in words"), 0);
+        }
+    }
+    ```
+
+* `Too Much Result`:结果超20000条异常
+
+    ```
+    ```
+
+    
+
+
+
 ## 11 界面模块的详细设计过程
 
-#### 11.1 GUI所用技术
+### 11.1 GUI所用技术
 
 我们构建GUI版本应用所使用的编程语言为Python，使用的包如下：
 
@@ -99,7 +405,7 @@
 
 打包所用的插件为`pyinstaller`。
 
-#### 11.2 设计风格
+### 11.2 设计风格
 
 我们使用的是`qdarkstyle`作为GUI的主题。
 
@@ -127,7 +433,7 @@
 
     <img src="./image-20230318171645866.png" alt="image-20230318171645866" style="zoom:50%;" />
 
-#### 11.3 代码设计
+### 11.3 代码设计
 
 1.   UI部分。我们采用QtDesigner的图形化设计界面得到ui的部分代码。生成如下：
 
