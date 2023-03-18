@@ -114,7 +114,7 @@ void WordGraph::parseConfig(Config& config)
     {
         if (contain_circle())
         {
-            throw invalid_argument();
+            check_ring_exception();
         }
         make_topo_list();
         if (config.type != 'n')

@@ -10,7 +10,7 @@ void check_conflicted_argument(char origin)
     }
 }
 
-void check_conflicted_arguemnt(bool origin)
+void check_conflicted_argument(bool origin)
 {
     if (origin)
     {
@@ -64,12 +64,12 @@ void check_is_single_alpha(const char* arg)
     }
 }
 
-void check_head_or_tail_args(char& origin, const char* arg)
-{
-    check_conflicted_arguemnt(origin);
-    check_is_single_alpha(arg);
-    origin = arg[0];
-}
+//void check_head_or_tail_args(char& origin, const char* arg)
+//{
+//    check_conflicted_arguemnt(origin);
+//    check_is_single_alpha(arg);
+//    origin = arg[0];
+//}
 
 void check_unexcepted_argument()
 {

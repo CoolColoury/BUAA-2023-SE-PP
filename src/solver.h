@@ -26,15 +26,15 @@ class GenChainMaxOnDFAStrategy : public Strategy
     void solve(WordGraph& word_graph, Config& config, std::vector<std::string>& ans);
 };
 
-class GenChainMaxOnMDGStrategy : public Strategy
-{
-public:
-    void dfs_circle(int now, std::vector<bool>& vis, std::vector<std::string>& words,
-        WordGraph& word_graph, Config& config, std::vector<std::string>& ans, int words_len, int& ans_len);
-    void solve(WordGraph& word_graph, Config& config, std::vector<std::string>& ans);
-};
+//class GenChainMaxOnMDGStrategy : public Strategy
+//{
+//public:
+//    void dfs_circle(int now, std::vector<bool>& vis, std::vector<std::string>& words,
+//        WordGraph& word_graph, Config& config, std::vector<std::string>& ans, int words_len, int& ans_len);
+//    void solve(WordGraph& word_graph, Config& config, std::vector<std::string>& ans);
+//};
 
-class GenChainMaxOnMDGThreadStrategy : public GenChainMaxOnMDGStrategy
+class GenChainMaxOnMDGThreadStrategy : public Strategy
 {
     void solve(WordGraph& word_graph, Config& config, std::vector<std::string>& ans);
 };

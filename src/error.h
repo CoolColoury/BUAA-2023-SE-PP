@@ -7,7 +7,7 @@
 
 class conflicted_argument : public std::exception
 {
-    const char* what() const { return "Confilicted Argument:"; }
+    const char* what() const { return "Conflicted Argument:"; }
 };
 
 class unexpected_argument : public std::exception
@@ -55,12 +55,12 @@ public:
 };
 
 void check_conflicted_argument(char origin);
-void check_conflicted_arguemnt(bool origin);
+void check_conflicted_argument(bool origin);
 void check_config_valid(const Config& config);
 void check_filename(char* filename);
 void check_bound(int index, int max);
 void check_is_single_alpha(const char* arg);
-void check_head_or_tail_args(char& origin, const char* arg);
+// void check_head_or_tail_args(char& origin, const char* arg);
 void check_unexcepted_argument();
 
 void check_too_much_result(int len);

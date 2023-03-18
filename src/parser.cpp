@@ -87,7 +87,7 @@ void Parser::check_args_error(int argc, char* argv[])
         {
             arg_i++;
             check_bound(arg_i, argc);
-            check_conflicted_arguemnt(config.tail);
+            check_conflicted_argument(config.tail);
             check_is_single_alpha(argv[arg_i]);
             config.tail = argv[arg_i][0];
         }
