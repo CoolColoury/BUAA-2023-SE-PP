@@ -131,5 +131,20 @@ namespace test
                 Assert::AreEqual(strcmp(e.what(), "Conflicted Argument: -n"), 0);
             }
         }
+
+        TEST_METHOD(TestRingArgumentValid)
+        {
+            Parser parser;
+            int argc = 4;
+            char* argv[] = { "-w", "stdin.txt", "-h", "a", "-r"};
+            try
+            {
+                parser.parse(argc, argv);
+            }
+            catch (const std::exception& e)
+            {
+                Assert::AreEqual(strcmp(e.what(), "Conflicted Argument: -w"), 0);
+            }
+        }
     };
 }
