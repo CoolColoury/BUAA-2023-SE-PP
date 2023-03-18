@@ -20,11 +20,6 @@ class missing_argument : public std::exception
     const char* what() const { return "Missing Argument:"; }
 };
 
-class invalid_argument : public std::exception
-{
-    const char* what() const { return "Invalid Argument:"; }
-};
-
 class invalid_file : public std::exception
 {
     const char* what() const { return "Invalid File:"; }
@@ -60,7 +55,6 @@ void check_config_valid(const Config& config);
 void check_filename(char* filename);
 void check_bound(int index, int max);
 void check_is_single_alpha(const char* arg);
-// void check_head_or_tail_args(char& origin, const char* arg);
 void check_unexcepted_argument();
 
 void check_too_much_result(int len);

@@ -1,6 +1,7 @@
 #include "error.h"
 #include <cstring>
 #include <cctype>
+#include <stdexcept>
 
 void check_conflicted_argument(char origin)
 {
@@ -60,7 +61,7 @@ void check_is_single_alpha(const char* arg)
 {
     if (strlen(arg) != 1 || !isalpha(arg[0]))
     {
-        throw invalid_argument();
+        throw std::invalid_argument("Invalid Argument: please give a single alpha instead of " + std::string(arg));
     }
 }
 
