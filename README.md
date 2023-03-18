@@ -61,7 +61,9 @@
 
 <img src="./img/4.png" alt="image-20230318212414379" style="zoom:50%;" />
 
+所测出的代码覆盖率如下：
 
+// 图
 
 各个单元测试分别如下：
 
@@ -359,7 +361,22 @@
 
 * `Missing File`:缺少文件或读取不了文件异常
 
-    ```
+    ```cpp
+    // 当前目录下没有.txt文件，或者没有权限读取.txt文件
+    TEST_METHOD(TestMissingFile)
+    {
+        Parser parser;
+        int argc = 2;
+        char* argv[] = { "-w", ".txt"};
+        try
+        {
+            parser.parse(argc, argv);
+        }
+        catch (const std::exception& e)
+        {
+            Assert::AreEqual(strcmp(e.what(), "Missing File: input file cannot open"), 0);
+        }
+    }
     ```
 
     
@@ -386,9 +403,24 @@
 
 * `Too Much Result`:结果超20000条异常
 
+    ```cpp
+    // 结果太长，超2w条
+    TEST_METHOD(TestTooMuchResult)
+    {
+        const char* words[] = { "ab", "abb", "abbb", "bc", "bcc", "bccc", "cd", "cdd", "cddd", "de", "dee", "deee", "ef", "eff", "efff", "fg", "fgg", "fggg", "gh", "ghh", "ghhh", "hi", "hii", "hiii", "ij", "ijj", "ijjj", "jk", "jkk", "jkkk" };
+        const char* ans[] = { 0 };
+        try
+        {
+            test_gen_chains_all(words, 30, ans, 0);
+        }
+        catch (const std::exception&)
+        {
+            char* error = get_error_message();
+            Assert::AreEqual(strcmp(get_error_message(), "Too Much Result: 132813"), 0);
+        }
+    }
     ```
-    ```
-
+    
     
 
 
@@ -624,6 +656,8 @@
 
 ## 12 界面模块与计算模块的对接
 
+### 12.1 前后端对接
+
 通过采用python自带的ctypes库导入dll库，并直接使用dll库的函数。
 
 导入dll库的代码为：
@@ -665,6 +699,23 @@ int gen_chain_char(const char* words[], int len, char* result[], char head, char
 
 char* get_error_message();
 ```
+
+### 12.2 松耦合实践：模块对调与对接
+
+我们与20373737和20373965小组进行了core.dll的交换。
+
+他们GUI运行我们dll的截图如下：
+
+<img src="D:\2023-BUAA-SE\BUAA-2023-SE-PP\img\5.png" alt="953161efb9a6d6e57c4fe6985b50959" style="zoom:50%;" />
+
+* 问题：参数类型不匹配
+    * 由于我们都使用了课程组提供的接口函数，因此整体上没有问题。
+    * 出现问题的是对于没有-h参数时的处理。我们的程序当没有—h时传入参数必须为0，而他们的GUI模块当无-h参数时传入的是'-'。
+* 问题：异常处理手段不一致
+    * 我们是throw异常
+    * 他们是将异常写入results，在GUI中进行判断
+
+
 
 ## 13 描述结对的过程
 
