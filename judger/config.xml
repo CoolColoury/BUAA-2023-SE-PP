@@ -90,4 +90,10 @@
 		<max-word-length>100</max-word-length>
 		<special>r</special>
 	</config>
+	<config id="16">
+		<seed>597873</seed>
+		<word-num>2</word-num>
+		<max-word-length>10</max-word-length>
+		<special>nr</special>
+	</config>
 </root>

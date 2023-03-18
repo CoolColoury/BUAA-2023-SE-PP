@@ -43,20 +43,33 @@ def check_format(input_list, o_type=None, head=None, tail=None, n_head=None, ena
                 raise ValueError('我超，两个自环')
     return length
 
+def compare_file(file1, file2):
+    input1 = []
+    with open(file1, "r") as f1:
+        input1 = f1.read().splitlines()
+    input2 = []
+    with open(file2, "r") as f2:
+        input2 = f2.read().splitlines()
+    input2 = input2[1:]
+    len1 = check_format(input1, 'c')
+    len2 = check_format(input2, 'c')
+    if len1 != len2:
+        raise ValueError('不相等')
 
 parser = argparse.ArgumentParser()
+parser.add_argument("-f", "--file")
 parser.add_argument("-n", "--number")
 parser.add_argument("-w", "--word")
 parser.add_argument("-c", "--char")
-parser.add_argument("-hh", "--head")
+parser.add_argument("-he", "--head")
 parser.add_argument("-t", "--tail")
 parser.add_argument("-j", "--n_head")
 parser.add_argument("-r", "--enable_loop", action="store_true")
 
 if __name__ == '__main__':
-    input_file = "stdin.txt"
-    input_list = []
     args = parser.parse_args()
+    input_file = args.file
+    input_list = []
 
     o_type = None
     if args.word:

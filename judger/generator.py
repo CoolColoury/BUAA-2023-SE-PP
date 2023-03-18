@@ -71,15 +71,15 @@ def get_one_word(config, head, tail):
 
 def get_one_test_point(config):
     random.seed(int(config['seed']))
-    result = get_splitter()
+    result = ''
 
     if config['special'] == 'nr':
         edges = get_no_loop_edges(int(config['word-num']))
         for edge in edges:
-            result += get_one_word(config, edge[0], edge[1]) + get_splitter()
+            result += get_one_word(config, edge[0], edge[1]) + '\n'
         # 添加自环
         for i in range(26):
-            result += get_one_word(config, i, i) + get_splitter()
+            result += get_one_word(config, i, i) + '\n'
     elif config['special'] == 'r':
         edges = get_random_edges(int(config['word-num']))
         for edge in edges:
