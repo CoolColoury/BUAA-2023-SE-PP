@@ -210,9 +210,9 @@ int gen_chain_char(const char* words[], int len, char* result[], char head, char
 
 <img src="./img/4.png" alt="image-20230318212414379" style="zoom:50%;" />
 
-所测出的代码覆盖率如下：
+所测出的代码覆盖率如下（注：我们单元测试覆盖了大部分的代码，由于`main.cpp`和`output.cpp`文件没有进行单元测试，因此也没有它们的覆盖率信息）：
 
-
+<img src=".\img\7.png" alt="d0bde1a1dee8e2a4dff0dbef3bd6967" style="zoom:50%;" />
 
 各个单元测试分别如下：
 
@@ -736,11 +736,11 @@ def compare_file(file1, file2):
 
 *   运行时间窗口：每次正确求解后都会弹出运行时间窗口。
 
-    <img src="./image-20230318171455305.png" alt="image-20230318171455305" style="zoom:50%;" />
+    <img src="./img/8.png" alt="f84b34916f9bee6f8760b0d2fb05c4c" style="zoom:50%;" />
 
 *   运行异常窗口：每次求解时出现异常都会弹出异常窗口，并得到相关异常信息。
 
-    <img src="./image-20230318171645866.png" alt="image-20230318171645866" style="zoom:50%;" />
+    <img src="./img/9.png" alt="694a6ebf60d52c9b9ad3d915562dd94" style="zoom:50%;" />
 
 ### 11.3 代码设计
 
@@ -979,11 +979,13 @@ char* get_error_message();
 
 ### 12.2 松耦合实践：模块对调与对接
 
+#### 第一组对接
+
 我们与20373737和20373965小组进行了core.dll的交换。
 
-他们GUI运行我们dll的截图如下：
+他们的GUI运行我们dll的截图如下：
 
-<img src="D:\2023-BUAA-SE\BUAA-2023-SE-PP\img\5.png" alt="953161efb9a6d6e57c4fe6985b50959" style="zoom:50%;" />
+<img src=".\img\5.png" alt="953161efb9a6d6e57c4fe6985b50959" style="zoom:50%;" />
 
 * 问题：参数类型不匹配
     * 由于我们都使用了课程组提供的接口函数，因此整体上没有问题。
@@ -991,6 +993,22 @@ char* get_error_message();
 * 问题：异常处理手段不一致
     * 我们是throw异常
     * 他们是将异常写入results，在GUI中进行判断
+
+#### 第二组对接
+
+同时，我们也与20373673和20373363小组进行了core.dll的交换。
+
+他们的GUI运行我们的dll的截图如下：
+
+<img src="./img/10.png" alt="image-20230319154856237" style="zoom:50%;" />
+
+* 问题：接口不一致导致的问题
+
+    他们采用将三种策略统一成的单个接口，与我们的接口不同，因此不太好对接。
+
+    ```cpp
+    const char* vuetifyAPI(const char* input, int type, char head, char tail, char reject,  bool weighted)
+    ```
 
 ## 13 描述结对的过程
 
