@@ -139,7 +139,9 @@ int gen_chain_char(const char* words[], int len, char* result[], char head, char
 
 ## 5 编译通过无警告截图
 
+我们开启了W4警告等级，并消除了全部警告。以下是我们的无警告截图。
 
+![6b15e110994189b9b6c4d404d743928](.\img\6.png)
 
 ## 6 UML
 
@@ -210,7 +212,7 @@ int gen_chain_char(const char* words[], int len, char* result[], char head, char
 
 所测出的代码覆盖率如下：
 
-// 图
+
 
 各个单元测试分别如下：
 
