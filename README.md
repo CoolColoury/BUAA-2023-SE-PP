@@ -224,6 +224,8 @@ int gen_chain_char(const char* words[], int len, char* result[], char head, char
 
 <img src=".\img\7.png" alt="d0bde1a1dee8e2a4dff0dbef3bd6967" style="zoom:50%;" />
 
+对于部分还未满100%覆盖率的文件。有以下几个原因：1. 防御性编程，有少数几处进行了此操作。在极限边界条件下会出现，单元测试不好进行。2. 部分异常抛出函数会进行抛出异常退出，从而导致之后的一行右大括号`}`没有覆盖到。
+
 各个单元测试分别如下：
 
 * `test_core`: 测试core模块的三个重要函数的功能。
