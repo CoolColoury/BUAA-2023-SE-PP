@@ -380,6 +380,15 @@ void GenChainMaxOnMDGThreadStrategy::solve(WordGraph& word_graph, Config& config
     }
     for (int i = 0; i < num_node; i++) 
     {
+        // guard
+        if (config.n_head == (i + 'a'))
+        {
+            continue;
+        }
+        else if (config.head != 0 && config.head != (i + 'a'))
+        {
+            continue;
+        }
         if (!word_graph.get_edges(i).empty())
         {
             threads[i].join();
