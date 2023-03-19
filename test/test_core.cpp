@@ -257,6 +257,12 @@ namespace test
             test_gen_chain_char(words, 2, ans, 2, 0, 0, 0, true);
         }
 
+        TEST_METHOD(TestCoreGenChainCharWithR5) {
+            const char* words[] = { "ab", "bc", "cd", "de"};
+            const char* ans[] = {  "ab", "bc", "cd" };
+            test_gen_chain_char(words, 4, ans, 3, 0, 0, 'd', true);
+        }
+
         // '-j'
         TEST_METHOD(TestCoreGenChainCharWithJ) {
             const char* words[] = { "element", "heaven", "able", "teach", "talk" };

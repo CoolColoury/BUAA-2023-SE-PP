@@ -337,7 +337,7 @@ void dfs_by_thread(int now, std::vector<bool>& vis, std::vector<std::string>& wo
                             ans_len = words_len + e.length;
                         }
                     }
-                    if (e.to != config.n_head + 'a')
+                    if (e.to + 'a' != config.n_head)
                     {
                         vis[e.id] = true;
                         dfs_by_thread(to, vis, words, word_graph, config, ans, words_len + e.length, ans_len);
