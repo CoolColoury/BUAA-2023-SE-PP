@@ -1,0 +1,18 @@
+17
+bc cc 
+bb bc cc 
+bb bc 
+ac cc 
+ab bc cc 
+ab bc 
+ab bb bc cc 
+ab bb bc 
+ab bb 
+aa ac cc 
+aa ac 
+aa ab bc cc 
+aa ab bc 
+aa ab bb bc cc 
+aa ab bb bc 
+aa ab bb 
+aa ab 
