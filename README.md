@@ -149,7 +149,29 @@ int gen_chain_char(const char* words[], int len, char* result[], char head, char
 
 ## 7 计算模块接口部分的性能改进
 
-#### 改进过程
+### 分析过程
+
+我们找到了一个60个单词成环情况下的性能点。
+
+3.15日，我们进行了第一版代码的性能测试，测试信息如下（由于Visual Studio的问题，函数名没能正常显示）。可以得到如下问题：
+
+CPU占用率很低。热力图集中在成环dfs函数上。
+
+<img src="./img/11png" alt="2afc79b66634bafc04b7f9f4fcb12d9" style="zoom:50%;" />
+
+
+
+<img src="./img/12.png" alt="083b083b847e341f4e7ed6026e4ccca" style="zoom:50%;" />
+
+3.19日，进行优化过后对**同一个测试点**的性能测试，测试信息如下图所示。
+
+<img src="./img/13.png" alt="6d18c73787b9d5f45df12eb5a57a979" style="zoom:50%;" />
+
+<img src="./img/14.png" alt="b7a97935d87d22e5be7b49ad50d48da" style="zoom:50%;" />
+
+
+
+### 改进过程
 
 由于无环图下时间复杂度已经是线性，且根据性能分析主要的时间开销在IO上，所以主要的优化还是针对有环NP问题的优化。主要采用了以下方式：
 
@@ -194,7 +216,7 @@ int gen_chain_char(const char* words[], int len, char* result[], char head, char
 
 - 用release发布生成版本（之前一直用的Debug版本，结果一直很慢）
 
-#### 性能总结 （命令行测试某个60行随机生成的数据）
+### 性能总结 （命令行测试某个随机生成的60个单词成环数据）
 
 |                 | DEBUG版 | ∆      | RELEASE版 | ∆      | DEBUG和RELEASE版 |
 | --------------- | ------- | ------ | --------- | ------ | ---------------- |
