@@ -33,7 +33,109 @@
 
 ## 4 计算模块接口的设计与实现过程
 
+首先我们我们对单词的预处理、对参数类型采用不同建图策略等操作都封装到了 WordGraph 类中实现。
 
+wordgraph类对外（public）有以下方法：
+
+```cpp
+// 构造方法
+WordGraph(const std::vector<std::string>& words, Config& config);
+// 获取总边数（单词数）
+int get_edge_num() const { return edge_num; }
+// 返回一个节点的邻接边
+const std::vector<Edge>& get_edges(int node) const；
+// 返回两个节点间的边（仅在enable_loop下会进行使用）
+const std::vector<Edge>& get_edges(int from, int to) const;
+// 返回节点拓扑序
+const std::vector<int>& get_topo_list() const；
+// 获得单词链数量
+long long get_chains_num();
+```
+
+以及以下私有（private）方法：
+
+```cpp
+// 含单词环
+bool contain_circle();
+// 构建拓扑序列
+bool make_topo_list();
+// 解析参数建图
+void parseConfig(Config& config);
+// 简化图（在非enable_loop下会进行使用）
+void simplify_dag(char type);
+```
+
+其中，构造方法会将所有单词小写并去重（题目要求）。封装在 WordGraph 类中的好处是我们可以在解决单词链问题时只关注图抽象层次的内容（例如某个节点的邻接边，），而不用关注图底层实现（实际上底层是用map实现的）。
+
+而图的处理上，采用了**策略模式**来实现不同方法的解藕，由 Solver 类进行调用
+
+Solver 类声明为：
+
+```cpp
+class Solver
+{
+private:
+    Strategy* m_strategy;
+    WordGraph m_word_graph;
+    Config m_config;
+
+public:
+    Solver(WordGraph& word_graph, Config& config);
+    void solve(std::vector<std::string>& output);
+
+    ~Solver();
+};
+```
+
+Strategy 抽象类声明为：
+
+```cpp
+class Strategy
+{
+public:
+    virtual void solve(WordGraph& word_graph, Config& config, std::vector<std::string>& ans) = 0;
+
+    virtual ~Strategy() = 0;
+};
+```
+
+实际调用链上是 Solver 在构造函数中创建对应 Strategy 方法的实现，在 Solver::solve 中调用 Strategy::solve。使用策略模式的好处是我们可以在实现和验证某个算法正确性的同时而不干涉其他算法。
+
+我们策略迭代大概经历了下面几个过程：
+
+- 深度优先搜索有环/无环图。这个算法大概30-40行就写好了，初期选择这个方法主要是为了保证正确性（避免过早考虑优化）。实现过于简单也不展开了。
+
+- 将不允许环的图改为拓扑排序实现。
+
+    - 拓扑排序可以判断图中是否有单词环，即自环不能超过两次，且去掉自环的可以构造拓扑序列
+
+    - 由于单词链需要两个以上单词并且图中允许一个自环，所以递归式为：
+
+        $$
+        dp_i = max_{j 拓扑序在 i 后}(dp_j+w_{ij},~tail_j+w_{ij})\\
+        tail_i = max(tail_i, w_{ij}),~i\ne j
+        $$
+
+        其中，$tail_i$ 表示以 $i$ 开头最长的单个单词，如果 $i$ 有自环还需要在遍历结束后
+
+        $$
+        dp_i = max(dp_j+w_{ii},~tail_i+w_{ii})\\
+        tail_i = max(tail_i, w_{ii}),~i\ne j
+        $$
+
+        实现细节上由于要记录也有不少细节，实际这个算法写了约100行。
+
+    - 在计算单词链总数也采用了拓扑排序，如果超过20000可以不需要记录就直接抛出异常。否则暴力搜索。
+
+- 优化有环时的DFS：由于有环下是NP问题，我们使用了剪枝和并发来加速搜索，这将在性能改进部分展开描述。
+
+对于官方提供的三个接口函数，我们直接采用了 Adapter 的思想调用我们自己的计算模块。
+
+```cpp
+int gen_chains_all(const char* words[], int len, char* result[]);
+int gen_chain_word(const char* words[], int len, char* result[], char head, char tail, char reject, bool enable_loop);
+int gen_chain_char(const char* words[], int len, char* result[], char head, char tail, char reject, bool enable_loop);
+```
 
 ## 5 编译通过无警告截图
 
@@ -44,6 +146,51 @@
 略
 
 ## 7 计算模块接口部分的性能改进
+
+由于无环图下时间复杂度已经是线性，且根据性能分析主要的时间开销在IO上，所以主要的优化还是针对有环NP问题的优化。主要采用了以下方式：
+
+- 剪枝：
+
+    - 自环直接处理
+
+    - 每次选择邻边时选择权重最大的一条
+
+- 多线程并发。使用了 `<thread>` 库，对遍历的每个开始节点都构建一个线程，在所有线程结束后找最优解。
+
+    ```cpp
+    void GenChainMaxOnMDGThreadStrategy::solve(WordGraph& word_graph, Config& config, std::vector<std::string>& ans)
+    {
+        /*
+         初始化
+         */
+        for (int i = 0; i < num_node; i++)
+        {
+            /*
+             一些守护条件
+             */
+            using std::ref;
+            if (!word_graph.get_edges(i).empty())
+            {
+                threads[i] = std::thread(dfs_by_thread, i, ref(vis[i]), ref(edges[i]), 
+                        ref(word_graph), ref(config), ref(c_ans[i]), 0, ref(c_ans_len[i]));
+            }
+        }
+        for (int i = 0; i < num_node; i++) 
+        {
+            if (!word_graph.get_edges(i).empty())
+            {
+                threads[i].join();
+            }
+        }
+        /*
+         找到最优解
+         */
+    }
+    ```
+
+- 用release发布生成版本（之前一直用的Debug版本，结果一直很慢）
+
+目前是跑6个点的完全图需要60s
 
 ## 8 契约相关
 
@@ -233,7 +380,138 @@
 
 ### 9.2 对拍测试
 
-// TODO \楠神加油!/
+#### 数据生成器
+
+用python进行数据生成：
+
+首先是用xml实现每个数据点配置文件，方便不同数据点进行定制化并保证数据点的可复现性。其中，seed是每次生成的种子数，word-num是总单词数，max-word-length是单词最长长度，special是生成环相关配置
+
+```xml
+<?xml version="1.0" ?>
+<root>
+	<config id="1">
+		<seed>597873</seed>
+		<word-num>10000</word-num>
+		<max-word-length>100</max-word-length>
+		<special>nr</special>
+	</config>
+</root>
+```
+
+生成图算法上，无环图利用了拓扑序进行生成，有环图则随机生成。无环图中强制加入了自环来提高数据强度
+
+```python
+num_node = 26  # 设置图中节点数量
+def get_no_loop_edges(edge_num):  # 生成DAG，存入以c命名的文件内
+    node = list(range(num_node))  # 将格式转换成list，便于下一步随机重排
+    random.shuffle(node)  # 随机重排
+    edges = []
+    for i in range(edge_num):
+        p1 = random.randint(0, num_node - 2)  # 选择第一个节点
+        p2 = random.randint(p1 + 1, num_node - 1)  # 选择第二个节点，这个节点的拓扑序必须大于第一个节点
+        edges.append((node[p1], node[p2]))
+    return edges
+
+
+def get_random_edges(edge_num):
+    edges = []
+    for i in range(edge_num):
+        p1 = random.randint(0, num_node - 1)  # 选择第一个节点
+        p2 = random.randint(0, num_node - 1)  # 选择第二个节点
+        edges.append((p1, p2))
+    return edges
+
+
+def get_one_word(config, head, tail):
+    word = shuffle_upper_or_lower(head)
+    length = random.randint(int(config['max-word-length']) * 2 // 3, int(config['max-word-length']))
+
+    for _ in range(length - 2):
+        word += shuffle_upper_or_lower(random.randint(0, 25))
+
+    word += shuffle_upper_or_lower(tail)
+    return word
+
+
+def get_one_test_point(config):
+    random.seed(int(config['seed']))
+    result = ''
+
+    if config['special'] == 'nr':
+        edges = get_no_loop_edges(int(config['word-num']))
+        for edge in edges:
+            result += get_one_word(config, edge[0], edge[1]) + '\n'
+        # 添加自环
+        for i in range(26):
+            result += get_one_word(config, i, i) + '\n'
+    elif config['special'] == 'r':
+        edges = get_random_edges(int(config['word-num']))
+        for edge in edges:
+            result += get_one_word(config, edge[0], edge[1]) + get_splitter()
+    else:
+        raise ValueError('Unknown Special {}'.format(config['special']))
+
+    return result
+```
+
+#### 正确性判断
+
+由于结果顺序可能不同，所以只加入了合法性判断（和单元测试实现相同），之后比较长度进行对拍
+
+```python
+def check_format(input_list, o_type=None, head=None, tail=None, n_head=None, enable_loop=False):
+    if len(input_list) == 0:
+        return 0
+    if head is not None and input_list[0][0] != head:
+        raise ValueError('错误的首字母')
+    if tail is not None and input_list[-1][-1] != tail:
+        raise ValueError('错误的尾字母')
+    pre_tail = input_list[0][0]
+    length = 0
+    self_loop_count = [0 for _ in range(26)]
+    vis = [0 for _ in range(26)]
+    for i in input_list:
+        if pre_tail != i[0]:
+            raise ValueError('首尾不相连')
+        if n_head is not None and i[0] != n_head:
+            raise ValueError('不允许的首字母')
+        pre_tail = i[-1]
+        if o_type == 'w':
+            length += len(i)
+        elif o_type == 'c':
+            length += 1
+        if i[0] == i[-1]:
+            self_loop_count[get_id_from_alpha(i[-1])] += 1
+        else:
+            vis[get_id_from_alpha(i[-1])] += 1
+    if not enable_loop:
+        for i in vis:
+            if i >= 2:
+                raise ValueError('环')
+        for i in self_loop_count:
+            if i >= 2:
+                raise ValueError('两个自环')
+    return length
+
+
+
+def compare_file(file1, file2):
+    input1 = []
+    with open(file1, "r") as f1:
+        input1 = f1.read().splitlines()
+    input2 = []
+    with open(file2, "r") as f2:
+        input2 = f2.read().splitlines()
+    input2 = input2[1:]
+    len1 = check_format(input1, 'c')
+    len2 = check_format(input2, 'c')
+    if len1 != len2:
+        raise ValueError('不相等')
+```
+
+#### 自动化
+
+直接用 os 模块调用 Wordlist.exe，用 time 模块记录时间，用 func-timeout 进行超时判断（300s）
 
 ## 10 计算模块部分异常处理说明
 
@@ -421,9 +699,6 @@
     }
     ```
     
-    
-
-
 
 ## 11 界面模块的详细设计过程
 
@@ -714,8 +989,6 @@ char* get_error_message();
 * 问题：异常处理手段不一致
     * 我们是throw异常
     * 他们是将异常写入results，在GUI中进行判断
-
-
 
 ## 13 描述结对的过程
 
