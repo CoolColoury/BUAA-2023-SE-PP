@@ -39,17 +39,17 @@ void Parser::parse_arg(int argc, char* argv[])
         else if (strcmp(argv[arg_i], "-h") == 0)
         {
             arg_i += 1;
-            m_config.head = argv[arg_i][0];
+            m_config.head = tolower(argv[arg_i][0]);
         }
         else if (strcmp(argv[arg_i], "-t") == 0)
         {
             arg_i += 1;
-            m_config.tail = argv[arg_i][0];
+            m_config.tail = tolower(argv[arg_i][0]);
         }
         else if (strcmp(argv[arg_i], "-j") == 0)
         {
             arg_i += 1;
-            m_config.n_head = argv[arg_i][0];
+            m_config.n_head = tolower(argv[arg_i][0]);
         }
         else if (strcmp(argv[arg_i], "-r") == 0)
         {
@@ -81,7 +81,7 @@ void Parser::check_args_error(int argc, char* argv[])
             check_bound(arg_i, argc, argv[arg_i - 1]);
             check_conflicted_argument(config.head);
             check_is_single_alpha(argv[arg_i]);
-            config.head = argv[arg_i][0];
+            config.head = tolower(argv[arg_i][0]);
         }
         else if (strcmp(argv[arg_i], "-t") == 0)
         {
@@ -89,7 +89,7 @@ void Parser::check_args_error(int argc, char* argv[])
             check_bound(arg_i, argc, argv[arg_i - 1]);
             check_conflicted_argument(config.tail);
             check_is_single_alpha(argv[arg_i]);
-            config.tail = argv[arg_i][0];
+            config.tail = tolower(argv[arg_i][0]);
         }
         else if (strcmp(argv[arg_i], "-j") == 0)
         {
@@ -97,7 +97,7 @@ void Parser::check_args_error(int argc, char* argv[])
             check_bound(arg_i, argc, argv[arg_i - 1]);
             check_conflicted_argument(config.n_head);
             check_is_single_alpha(argv[arg_i]);
-            config.n_head = argv[arg_i][0];
+            config.n_head = tolower(argv[arg_i][0]);
         }
         else if (strcmp(argv[arg_i], "-r") == 0)
         {

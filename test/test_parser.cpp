@@ -78,5 +78,14 @@ namespace test
             parser.parse(argc, argv);
             test_config(parser.get_config(), 0, 0, 0, 'c', true);
         }
+
+        TEST_METHOD(TestParseWithUPPER)
+        {
+            Parser parser;
+            int argc = 4;
+            char* argv[] = { "-c", "stdin.txt", "-h", "V"};
+            parser.parse(argc, argv);
+            test_config(parser.get_config(), 'v', 0, 0, 'c', false);
+        }
     };
 }
