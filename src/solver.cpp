@@ -10,6 +10,7 @@ void GenChainsAllStrategy::dfs_circle(int now, std::vector<bool>& vis, std::vect
         {
             words.push_back(e.word);
             add_chain(ans, words);
+            check_too_much_result((long long)ans.size());
             vis[e.id] = true;
             dfs_circle(e.to, vis, words, word_graph, ans);
             vis[e.id] = false;
