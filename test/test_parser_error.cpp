@@ -141,7 +141,7 @@ namespace test
             {
                 parser.parse(argc, argv);
             }
-            catch (const std::exception& e) 
+            catch (const std::exception&) 
             {
                 Assert::IsTrue(false);
             }
